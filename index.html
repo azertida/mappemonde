@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mappemonde</title>
+<meta name="description" content="Quiz de géographie : capitales, drapeaux, États américains">
+<meta name="theme-color" content="#0B1F2A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mappemonde">
+<style>
+:root{
+  --abysse:#0B1F2A;
+  --plateau:#153845;
+  --plateau-clair:#1D4A5C;
+  --parchemin:#F4ECDC;
+  --second:#C8DBE1;
+  --etiquette:#A9C8D2;
+  --trait:#4E7D8B;
+  --oxyde:#C0492F;
+  --sonde:#6E9C6B;
+  --serif:Baskerville,"Iowan Old Style",Palatino,Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+html{font-size:100%;background:var(--abysse);color-scheme:dark}
+html[data-taille="grand"]{font-size:115%}
+html[data-taille="tres-grand"]{font-size:132%}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{
+  background:var(--abysse);
+  color:var(--parchemin);
+  font-family:var(--sans);
+  min-height:100vh;
+  padding:env(safe-area-inset-top) 18px calc(28px + env(safe-area-inset-bottom));
+  -webkit-text-size-adjust:100%;
+}
+/* Graticule : le quadrillage lat/long d'un atlas */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(to right,rgba(78,125,139,.16) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(to bottom,rgba(78,125,139,.16) 0 1px,transparent 1px 56px);
+  mask-image:radial-gradient(ellipse at 50% 38%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 38%,#000 20%,transparent 78%);
+}
+.feuille{position:relative;z-index:1;max-width:560px;margin:0 auto;padding-top:34px}
+
+.eyebrow{
+  font-family:var(--sans);font-size:.85rem;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--etiquette);
+}
+h1{
+  font-family:var(--serif);font-weight:400;font-size:clamp(2.6rem,13vw,3.6rem);
+  letter-spacing:.02em;line-height:1;margin:8px 0 6px;
+}
+.sous-titre{font-size:1.05rem;line-height:1.5;color:var(--second);margin-bottom:30px}
+
+/* Accueil : trois plaques */
+.plaque{
+  display:flex;align-items:center;gap:16px;width:100%;text-align:left;
+  background:var(--plateau);border:1px solid #21506380;border-radius:3px;
+  color:var(--parchemin);padding:20px 18px;margin-bottom:12px;cursor:pointer;
+  font:inherit;transition:background .18s ease,transform .18s ease;
+}
+.plaque:hover{background:var(--plateau-clair)}
+.plaque:active{transform:translateY(1px)}
+.plaque .glyphe{font-size:1.9rem;line-height:1;width:36px;flex:none;text-align:center}
+.plaque .texte{flex:1;min-width:0}
+.plaque .nom{display:block;font-family:var(--sans);font-weight:600;font-size:1.3rem;line-height:1.25}
+.plaque .detail{display:block;font-size:.92rem;color:var(--second);margin-top:5px;line-height:1.35}
+.plaque .record{
+  margin-left:auto;flex:none;font-size:.85rem;font-weight:600;
+  color:var(--etiquette);text-align:right;white-space:nowrap;line-height:1.35;
+}
+.pied{
+  font-size:.9rem;color:#9BBAC4;margin-top:30px;line-height:1.7;
+}
+
+/* Barre de progression : une règle graduée */
+.entete{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;gap:12px}
+.entete .mode{font-size:.9rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--etiquette)}
+.quitter{background:none;border:none;color:var(--etiquette);font-family:var(--sans);font-size:.9rem;
+  font-weight:600;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;padding:4px}
+.quitter:hover{color:var(--parchemin)}
+.regle{display:flex;gap:4px;margin-bottom:30px}
+.regle span{flex:1;height:5px;background:#25525F}
+.regle span.juste{background:var(--sonde)}
+.regle span.faux{background:var(--oxyde)}
+.regle span.active{background:var(--parchemin)}
+
+.question{font-family:var(--sans);font-weight:600;font-size:1.85rem;line-height:1.25;margin-bottom:8px}
+.drapeau{font-size:5.6rem;line-height:1.1;margin-bottom:12px;letter-spacing:0}
+.consigne{font-size:.95rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--etiquette);margin-bottom:22px;line-height:1.4}
+
+.reponses{display:flex;flex-direction:column;gap:10px}
+.reponse{
+  background:var(--plateau);border:1px solid #2A6072;border-left:4px solid var(--trait);
+  border-radius:2px;color:var(--parchemin);font:inherit;font-size:1.2rem;line-height:1.35;
+  padding:19px 18px;text-align:left;cursor:pointer;
+  transition:background .15s ease,border-color .15s ease;
+  animation:monte .28s ease both;
+}
+.reponse:nth-child(2){animation-delay:.04s}
+.reponse:nth-child(3){animation-delay:.08s}
+.reponse:nth-child(4){animation-delay:.12s}
+@keyframes monte{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.reponse:hover:not(:disabled){background:var(--plateau-clair)}
+.reponse:disabled{cursor:default}
+.reponse.juste{border-left-color:var(--sonde);background:#1E463C;color:#D9F0D3}
+.reponse.faux{border-left-color:var(--oxyde);background:#42251E;color:#F6CFC5}
+.reponse:focus-visible{outline:2px solid var(--parchemin);outline-offset:2px}
+
+.verdict{margin-top:22px;min-height:28px;font-size:1.1rem;line-height:1.45;color:var(--second)}
+.verdict strong{color:var(--parchemin);font-weight:700}
+.suivant{
+  width:100%;margin-top:18px;padding:19px;background:var(--parchemin);color:var(--abysse);
+  border:none;border-radius:2px;font-family:var(--sans);font-size:1.05rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+}
+.suivant:hover{background:#fff}
+
+/* Fin de manche */
+.score{font-family:var(--serif);font-size:5rem;line-height:1;margin:10px 0 4px}
+.score small{font-size:2rem;color:var(--etiquette)}
+.bilan{color:var(--second);font-size:1.05rem;margin-bottom:30px;line-height:1.55}
+/* Récapitulatif des erreurs */
+.revoir{margin-bottom:30px}
+.revoir h2{
+  font-family:var(--sans);font-size:.9rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--etiquette);
+  padding-bottom:9px;border-bottom:1px solid #2A6072;margin-bottom:4px;
+}
+.rate{display:flex;gap:14px;align-items:baseline;padding:14px 0;border-bottom:1px solid #1F4757}
+.rate .invite{flex:1;font-family:var(--sans);font-weight:600;font-size:1.15rem;line-height:1.3}
+.rate .invite .drap{font-size:1.9rem}
+.rate .bonne{text-align:right;color:#B6DDB0;font-size:1.05rem;line-height:1.3}
+.rate .tien{display:block;margin-top:4px;color:#C08D80;font-size:.9rem;text-decoration:line-through}
+
+.secondaire{
+  width:100%;margin-top:10px;padding:19px;background:none;color:var(--parchemin);
+  border:1px solid var(--etiquette);border-radius:2px;font-family:var(--sans);font-size:1.05rem;
+  font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+}
+.secondaire:hover{background:var(--plateau)}
+
+/* Réglage de la taille du texte */
+.taille{display:flex;align-items:center;gap:10px;margin-top:26px;flex-wrap:wrap}
+.taille .titre{font-size:.9rem;font-weight:600;color:var(--etiquette);
+  text-transform:uppercase;letter-spacing:.06em;width:100%}
+.taille button{
+  flex:1;min-width:70px;padding:14px 10px;background:none;color:var(--parchemin);
+  border:1px solid #2A6072;border-radius:2px;font-family:var(--sans);cursor:pointer;
+}
+.taille button:nth-child(2){font-size:1rem}
+.taille button:nth-child(3){font-size:1.25rem}
+.taille button:nth-child(4){font-size:1.5rem}
+.taille button[aria-pressed="true"]{background:var(--parchemin);color:var(--abysse);border-color:var(--parchemin);font-weight:700}
+
+.ecran{display:none}
+.ecran.visible{display:block}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="feuille">
+
+  <!-- ACCUEIL -->
+  <section class="ecran visible" id="accueil">
+    <p class="eyebrow">Quiz de géographie</p>
+    <h1>Mappemonde</h1>
+    <p class="sous-titre">Dix questions par manche. Choisis ton terrain.</p>
+
+    <button class="plaque" data-mode="capitales">
+      <span class="glyphe">◉</span>
+      <span class="texte">
+        <span class="nom">Capitales du monde</span>
+        <span class="detail" id="nbPays"></span>
+      </span>
+      <span class="record" id="recCapitales"></span>
+    </button>
+
+    <button class="plaque" data-mode="drapeaux">
+      <span class="glyphe">⚑</span>
+      <span class="texte">
+        <span class="nom">Drapeaux</span>
+        <span class="detail">Reconnaître le pays</span>
+      </span>
+      <span class="record" id="recDrapeaux"></span>
+    </button>
+
+    <button class="plaque" data-mode="usa">
+      <span class="glyphe">★</span>
+      <span class="texte">
+        <span class="nom">États américains</span>
+        <span class="detail">Les 50 États et leurs capitales</span>
+      </span>
+      <span class="record" id="recUsa"></span>
+    </button>
+
+    <div class="taille" id="taille">
+      <span class="titre">Taille du texte</span>
+      <button data-taille="normal" aria-pressed="false">Aa</button>
+      <button data-taille="grand" aria-pressed="false">Aa</button>
+      <button data-taille="tres-grand" aria-pressed="false">Aa</button>
+    </div>
+
+    <p class="pied">
+      Fonctionne hors ligne · Aucune donnée envoyée<br>
+      Scores conservés sur cet appareil<br>
+      <span id="totalParties"></span>
+    </p>
+  </section>
+
+  <!-- JEU -->
+  <section class="ecran" id="jeu">
+    <div class="entete">
+      <span class="mode" id="modeEnCours"></span>
+      <button class="quitter" id="btnQuitter">Quitter</button>
+    </div>
+    <div class="regle" id="regle"></div>
+    <div class="drapeau" id="drapeau" hidden></div>
+    <p class="consigne" id="consigne"></p>
+    <p class="question" id="question"></p>
+    <div class="reponses" id="reponses"></div>
+    <p class="verdict" id="verdict"></p>
+    <button class="suivant" id="btnSuivant" hidden>Suivant</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="ecran" id="fin">
+    <p class="eyebrow" id="modeFini"></p>
+    <p class="score"><span id="scoreFinal">0</span><small> / 10</small></p>
+    <p class="bilan" id="bilan"></p>
+    <div class="revoir" id="revoir"></div>
+    <button class="suivant" id="btnRejouer">Rejouer</button>
+    <button class="secondaire" id="btnAccueil">Changer de terrain</button>
+  </section>
+
+</div>
+
+<script>
+/* ---------- Données ---------- */
+// [code ISO, pays, capitale, continent]
+const PAYS = [
+["AL","Albanie","Tirana","EU"],["DE","Allemagne","Berlin","EU"],["AD","Andorre","Andorre-la-Vieille","EU"],
+["AT","Autriche","Vienne","EU"],["BY","Biélorussie","Minsk","EU"],["BE","Belgique","Bruxelles","EU"],
+["BA","Bosnie-Herzégovine","Sarajevo","EU"],["BG","Bulgarie","Sofia","EU"],["CY","Chypre","Nicosie","EU"],
+["HR","Croatie","Zagreb","EU"],["DK","Danemark","Copenhague","EU"],["ES","Espagne","Madrid","EU"],
+["EE","Estonie","Tallinn","EU"],["FI","Finlande","Helsinki","EU"],["FR","France","Paris","EU"],
+["GR","Grèce","Athènes","EU"],["HU","Hongrie","Budapest","EU"],["IE","Irlande","Dublin","EU"],
+["IS","Islande","Reykjavik","EU"],["IT","Italie","Rome","EU"],["LV","Lettonie","Riga","EU"],
+["LI","Liechtenstein","Vaduz","EU"],["LT","Lituanie","Vilnius","EU"],["LU","Luxembourg","Luxembourg","EU"],
+["MK","Macédoine du Nord","Skopje","EU"],["MT","Malte","La Valette","EU"],["MD","Moldavie","Chisinau","EU"],
+["MC","Monaco","Monaco","EU"],["ME","Monténégro","Podgorica","EU"],["NO","Norvège","Oslo","EU"],
+["NL","Pays-Bas","Amsterdam","EU"],["PL","Pologne","Varsovie","EU"],["PT","Portugal","Lisbonne","EU"],
+["CZ","Tchéquie","Prague","EU"],["RO","Roumanie","Bucarest","EU"],["GB","Royaume-Uni","Londres","EU"],
+["RU","Russie","Moscou","EU"],["SM","Saint-Marin","Saint-Marin","EU"],["RS","Serbie","Belgrade","EU"],
+["SK","Slovaquie","Bratislava","EU"],["SI","Slovénie","Ljubljana","EU"],["SE","Suède","Stockholm","EU"],
+["CH","Suisse","Berne","EU"],["UA","Ukraine","Kiev","EU"],["TR","Turquie","Ankara","EU"],
+["AF","Afghanistan","Kaboul","AS"],["SA","Arabie saoudite","Riyad","AS"],["AM","Arménie","Erevan","AS"],
+["AZ","Azerbaïdjan","Bakou","AS"],["BH","Bahreïn","Manama","AS"],["BD","Bangladesh","Dacca","AS"],
+["BT","Bhoutan","Thimphou","AS"],["MM","Birmanie","Naypyidaw","AS"],["BN","Brunei","Bandar Seri Begawan","AS"],
+["KH","Cambodge","Phnom Penh","AS"],["CN","Chine","Pékin","AS"],["KP","Corée du Nord","Pyongyang","AS"],
+["KR","Corée du Sud","Séoul","AS"],["AE","Émirats arabes unis","Abou Dabi","AS"],["GE","Géorgie","Tbilissi","AS"],
+["IN","Inde","New Delhi","AS"],["ID","Indonésie","Jakarta","AS"],["IQ","Irak","Bagdad","AS"],
+["IR","Iran","Téhéran","AS"],["JP","Japon","Tokyo","AS"],["JO","Jordanie","Amman","AS"],
+["KZ","Kazakhstan","Astana","AS"],["KG","Kirghizistan","Bichkek","AS"],["KW","Koweït","Koweït","AS"],
+["LA","Laos","Vientiane","AS"],["LB","Liban","Beyrouth","AS"],["MY","Malaisie","Kuala Lumpur","AS"],
+["MV","Maldives","Malé","AS"],["MN","Mongolie","Oulan-Bator","AS"],["NP","Népal","Katmandou","AS"],
+["OM","Oman","Mascate","AS"],["UZ","Ouzbékistan","Tachkent","AS"],["PK","Pakistan","Islamabad","AS"],
+["PH","Philippines","Manille","AS"],["QA","Qatar","Doha","AS"],["SG","Singapour","Singapour","AS"],
+["LK","Sri Lanka","Colombo","AS"],["SY","Syrie","Damas","AS"],["TJ","Tadjikistan","Douchanbé","AS"],
+["TH","Thaïlande","Bangkok","AS"],["TL","Timor oriental","Dili","AS"],["TM","Turkménistan","Achgabat","AS"],
+["VN","Viêt Nam","Hanoï","AS"],["YE","Yémen","Sanaa","AS"],
+["ZA","Afrique du Sud","Pretoria","AF"],["DZ","Algérie","Alger","AF"],["AO","Angola","Luanda","AF"],
+["BJ","Bénin","Porto-Novo","AF"],["BW","Botswana","Gaborone","AF"],["BF","Burkina Faso","Ouagadougou","AF"],
+["BI","Burundi","Gitega","AF"],["CM","Cameroun","Yaoundé","AF"],["CV","Cap-Vert","Praia","AF"],
+["CF","République centrafricaine","Bangui","AF"],["KM","Comores","Moroni","AF"],["CG","Congo","Brazzaville","AF"],
+["CD","République démocratique du Congo","Kinshasa","AF"],["CI","Côte d'Ivoire","Yamoussoukro","AF"],
+["DJ","Djibouti","Djibouti","AF"],["EG","Égypte","Le Caire","AF"],["ER","Érythrée","Asmara","AF"],
+["SZ","Eswatini","Mbabane","AF"],["ET","Éthiopie","Addis-Abeba","AF"],["GA","Gabon","Libreville","AF"],
+["GM","Gambie","Banjul","AF"],["GH","Ghana","Accra","AF"],["GN","Guinée","Conakry","AF"],
+["GW","Guinée-Bissau","Bissau","AF"],["GQ","Guinée équatoriale","Malabo","AF"],["KE","Kenya","Nairobi","AF"],
+["LS","Lesotho","Maseru","AF"],["LR","Liberia","Monrovia","AF"],["LY","Libye","Tripoli","AF"],
+["MG","Madagascar","Antananarivo","AF"],["MW","Malawi","Lilongwe","AF"],["ML","Mali","Bamako","AF"],
+["MA","Maroc","Rabat","AF"],["MU","Maurice","Port-Louis","AF"],["MR","Mauritanie","Nouakchott","AF"],
+["MZ","Mozambique","Maputo","AF"],["NA","Namibie","Windhoek","AF"],["NE","Niger","Niamey","AF"],
+["NG","Nigeria","Abuja","AF"],["UG","Ouganda","Kampala","AF"],["RW","Rwanda","Kigali","AF"],
+["ST","Sao Tomé-et-Principe","São Tomé","AF"],["SN","Sénégal","Dakar","AF"],["SC","Seychelles","Victoria","AF"],
+["SL","Sierra Leone","Freetown","AF"],["SO","Somalie","Mogadiscio","AF"],["SD","Soudan","Khartoum","AF"],
+["SS","Soudan du Sud","Djouba","AF"],["TZ","Tanzanie","Dodoma","AF"],["TD","Tchad","N'Djaména","AF"],
+["TG","Togo","Lomé","AF"],["TN","Tunisie","Tunis","AF"],["ZM","Zambie","Lusaka","AF"],
+["ZW","Zimbabwe","Harare","AF"],
+["AG","Antigua-et-Barbuda","Saint John's","AM"],["AR","Argentine","Buenos Aires","AM"],["BS","Bahamas","Nassau","AM"],
+["BB","Barbade","Bridgetown","AM"],["BZ","Belize","Belmopan","AM"],["BO","Bolivie","Sucre","AM"],
+["BR","Brésil","Brasilia","AM"],["CA","Canada","Ottawa","AM"],["CL","Chili","Santiago","AM"],
+["CO","Colombie","Bogota","AM"],["CR","Costa Rica","San José","AM"],["CU","Cuba","La Havane","AM"],
+["DM","Dominique","Roseau","AM"],["SV","Salvador","San Salvador","AM"],["EC","Équateur","Quito","AM"],
+["US","États-Unis","Washington","AM"],["GD","Grenade","Saint-Georges","AM"],["GT","Guatemala","Guatemala","AM"],
+["GY","Guyana","Georgetown","AM"],["HT","Haïti","Port-au-Prince","AM"],["HN","Honduras","Tegucigalpa","AM"],
+["JM","Jamaïque","Kingston","AM"],["MX","Mexique","Mexico","AM"],["NI","Nicaragua","Managua","AM"],
+["PA","Panama","Panama","AM"],["PY","Paraguay","Asuncion","AM"],["PE","Pérou","Lima","AM"],
+["DO","République dominicaine","Saint-Domingue","AM"],["KN","Saint-Christophe-et-Niévès","Basseterre","AM"],
+["LC","Sainte-Lucie","Castries","AM"],["VC","Saint-Vincent-et-les-Grenadines","Kingstown","AM"],
+["SR","Suriname","Paramaribo","AM"],["TT","Trinité-et-Tobago","Port-d'Espagne","AM"],
+["UY","Uruguay","Montevideo","AM"],["VE","Venezuela","Caracas","AM"],
+["AU","Australie","Canberra","OC"],["FJ","Fidji","Suva","OC"],["KI","Kiribati","Tarawa","OC"],
+["MH","Îles Marshall","Majuro","OC"],["FM","Micronésie","Palikir","OC"],["NR","Nauru","Yaren","OC"],
+["NZ","Nouvelle-Zélande","Wellington","OC"],["PW","Palaos","Ngerulmud","OC"],
+["PG","Papouasie-Nouvelle-Guinée","Port Moresby","OC"],["WS","Samoa","Apia","OC"],
+["SB","Îles Salomon","Honiara","OC"],["TO","Tonga","Nuku'alofa","OC"],["TV","Tuvalu","Funafuti","OC"],
+["VU","Vanuatu","Port-Vila","OC"]
+];
+
+const ETATS = [
+["Alabama","Montgomery"],["Alaska","Juneau"],["Arizona","Phoenix"],["Arkansas","Little Rock"],
+["Californie","Sacramento"],["Caroline du Nord","Raleigh"],["Caroline du Sud","Columbia"],["Colorado","Denver"],
+["Connecticut","Hartford"],["Dakota du Nord","Bismarck"],["Dakota du Sud","Pierre"],["Delaware","Dover"],
+["Floride","Tallahassee"],["Géorgie","Atlanta"],["Hawaï","Honolulu"],["Idaho","Boise"],
+["Illinois","Springfield"],["Indiana","Indianapolis"],["Iowa","Des Moines"],["Kansas","Topeka"],
+["Kentucky","Frankfort"],["Louisiane","Bâton-Rouge"],["Maine","Augusta"],["Maryland","Annapolis"],
+["Massachusetts","Boston"],["Michigan","Lansing"],["Minnesota","Saint Paul"],["Mississippi","Jackson"],
+["Missouri","Jefferson City"],["Montana","Helena"],["Nebraska","Lincoln"],["Nevada","Carson City"],
+["New Hampshire","Concord"],["New Jersey","Trenton"],["New York","Albany"],["Nouveau-Mexique","Santa Fe"],
+["Ohio","Columbus"],["Oklahoma","Oklahoma City"],["Oregon","Salem"],["Pennsylvanie","Harrisburg"],
+["Rhode Island","Providence"],["Tennessee","Nashville"],["Texas","Austin"],["Utah","Salt Lake City"],
+["Vermont","Montpelier"],["Virginie","Richmond"],["Virginie-Occidentale","Charleston"],["Washington","Olympia"],
+["Wisconsin","Madison"],["Wyoming","Cheyenne"]
+];
+
+/* ---------- Outils ---------- */
+const CLE='mappemonde.v1';
+const LONGUEUR=10;
+const $=id=>document.getElementById(id);
+const drapeauDe=code=>String.fromCodePoint(...[...code].map(c=>0x1F1E6+c.charCodeAt(0)-65));
+const melange=t=>{const a=[...t];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+function lire(){
+  try{return JSON.parse(localStorage.getItem(CLE))||{records:{},parties:0};}
+  catch(e){return {records:{},parties:0};}
+}
+function ecrire(d){
+  try{localStorage.setItem(CLE,JSON.stringify(d));}catch(e){/* stockage indisponible */}
+}
+
+const LIBELLES={capitales:'Capitales du monde',drapeaux:'Drapeaux',usa:'États américains'};
+
+/* ---------- Fabrication des questions ---------- */
+function fabrique(mode){
+  if(mode==='usa'){
+    return melange(ETATS).slice(0,LONGUEUR).map(etat=>{
+      const inverse=Math.random()<.4;
+      const leurres=melange(ETATS.filter(e=>e[0]!==etat[0])).slice(0,3);
+      return inverse
+        ? {consigne:'De quel État est-elle la capitale ?',question:etat[1],
+           bonne:etat[0],options:melange([etat[0],...leurres.map(e=>e[0])])}
+        : {consigne:'Quelle est sa capitale ?',question:etat[0],
+           bonne:etat[1],options:melange([etat[1],...leurres.map(e=>e[1])])};
+    });
+  }
+  return melange(PAYS).slice(0,LONGUEUR).map(pays=>{
+    const memeZone=PAYS.filter(p=>p[3]===pays[3]&&p[0]!==pays[0]);
+    const vivier=memeZone.length>=3?memeZone:PAYS.filter(p=>p[0]!==pays[0]);
+    const leurres=melange(vivier).slice(0,3);
+    if(mode==='drapeaux'){
+      return {drapeau:drapeauDe(pays[0]),consigne:'Quel est ce pays ?',question:'',
+              bonne:pays[1],options:melange([pays[1],...leurres.map(p=>p[1])])};
+    }
+    const inverse=Math.random()<.35;
+    return inverse
+      ? {consigne:'De quel pays est-elle la capitale ?',question:pays[2],
+         bonne:pays[1],options:melange([pays[1],...leurres.map(p=>p[1])])}
+      : {consigne:'Quelle est sa capitale ?',question:pays[1],
+         bonne:pays[2],options:melange([pays[2],...leurres.map(p=>p[2])])};
+  });
+}
+
+/* ---------- Déroulement ---------- */
+let manche=[],index=0,score=0,mode=null,rates=[];
+
+function ecran(id){
+  document.querySelectorAll('.ecran').forEach(s=>s.classList.toggle('visible',s.id===id));
+  window.scrollTo(0,0);
+}
+
+function demarrer(m){
+  mode=m;manche=fabrique(m);index=0;score=0;rates=[];
+  $('modeEnCours').textContent=LIBELLES[m];
+  $('regle').innerHTML=Array.from({length:LONGUEUR},()=>'<span></span>').join('');
+  ecran('jeu');
+  poser();
+}
+
+function poser(){
+  const q=manche[index];
+  const tirets=$('regle').children;
+  [...tirets].forEach((t,i)=>t.classList.toggle('active',i===index));
+
+  $('drapeau').hidden=!q.drapeau;
+  $('drapeau').textContent=q.drapeau||'';
+  $('consigne').textContent=q.consigne;
+  $('question').textContent=q.question;
+  $('question').hidden=!q.question;
+  $('verdict').textContent='';
+  $('btnSuivant').hidden=true;
+
+  const zone=$('reponses');
+  zone.innerHTML='';
+  q.options.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='reponse';
+    b.textContent=opt;
+    b.addEventListener('click',()=>repondre(b,opt,q));
+    zone.appendChild(b);
+  });
+}
+
+function repondre(bouton,choix,q){
+  const juste=choix===q.bonne;
+  if(juste)score++;
+  else rates.push({
+    invite:q.drapeau?'<span class="drap">'+q.drapeau+'</span>':q.question,
+    bonne:q.bonne,
+    choix:choix
+  });
+  $('regle').children[index].classList.add(juste?'juste':'faux');
+
+  [...$('reponses').children].forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.bonne)b.classList.add('juste');
+  });
+  if(!juste)bouton.classList.add('faux');
+
+  $('verdict').innerHTML=juste
+    ? 'Exact.'
+    : 'C\'était <strong>'+q.bonne+'</strong>.';
+
+  $('btnSuivant').hidden=false;
+  $('btnSuivant').textContent=index===LONGUEUR-1?'Voir le résultat':'Suivant';
+}
+
+function suivant(){
+  index++;
+  if(index<LONGUEUR){poser();return;}
+  terminer();
+}
+
+function terminer(){
+  const d=lire();
+  const ancien=d.records[mode]||0;
+  const nouveau=score>ancien;
+  d.records[mode]=Math.max(ancien,score);
+  d.parties=(d.parties||0)+1;
+  ecrire(d);
+
+  $('modeFini').textContent=LIBELLES[mode];
+  $('scoreFinal').textContent=score;
+  let phrase;
+  if(nouveau&&score>0)phrase='Nouveau record sur ce terrain.';
+  else if(score===10)phrase='Sans faute. Difficile de faire mieux.';
+  else if(score>=7)phrase='Solide. Le podium n\'est pas loin.';
+  else if(score>=4)phrase='La moitié du chemin. Une autre manche ?';
+  else phrase='Le monde est vaste. On recommence ?';
+  $('bilan').textContent=phrase+' Meilleur score : '+d.records[mode]+' / 10.';
+  afficherRates();
+  rafraichirAccueil();
+  ecran('fin');
+}
+
+function afficherRates(){
+  const zone=$('revoir');
+  if(!rates.length){zone.innerHTML='';return;}
+  zone.innerHTML='<h2>À revoir — '+rates.length+' erreur'+(rates.length>1?'s':'')+'</h2>'+
+    rates.map(r=>
+      '<div class="rate">'+
+        '<span class="invite">'+r.invite+'</span>'+
+        '<span class="bonne">'+r.bonne+'<span class="tien">'+r.choix+'</span></span>'+
+      '</div>').join('');
+}
+
+function rafraichirAccueil(){
+  const d=lire();
+  const aff=m=>d.records[m]!==undefined?'Record<br>'+d.records[m]+'/10':'Jamais joué';
+  $('recCapitales').innerHTML=aff('capitales');
+  $('recDrapeaux').innerHTML=aff('drapeaux');
+  $('recUsa').innerHTML=aff('usa');
+  $('nbPays').textContent=PAYS.length+' pays, tous continents';
+  $('totalParties').textContent=d.parties?d.parties+' manche'+(d.parties>1?'s':'')+' jouée'+(d.parties>1?'s':''):'';
+}
+
+/* ---------- Taille du texte ---------- */
+function appliquerTaille(t){
+  document.documentElement.dataset.taille=t;
+  document.querySelectorAll('#taille button').forEach(b=>
+    b.setAttribute('aria-pressed',String(b.dataset.taille===t)));
+  const d=lire();d.taille=t;ecrire(d);
+}
+document.querySelectorAll('#taille button').forEach(b=>
+  b.addEventListener('click',()=>appliquerTaille(b.dataset.taille)));
+appliquerTaille(lire().taille||'normal');
+
+/* ---------- Branchements ---------- */
+document.querySelectorAll('.plaque').forEach(b=>
+  b.addEventListener('click',()=>demarrer(b.dataset.mode)));
+$('btnSuivant').addEventListener('click',suivant);
+$('btnRejouer').addEventListener('click',()=>demarrer(mode));
+$('btnAccueil').addEventListener('click',()=>{rafraichirAccueil();ecran('accueil');});
+$('btnQuitter').addEventListener('click',()=>{rafraichirAccueil();ecran('accueil');});
+
+rafraichirAccueil();
+</script>
+</body>
+</html>

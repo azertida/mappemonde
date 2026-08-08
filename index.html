@@ -227,6 +227,15 @@ h1{
       <span class="record" id="recUsa"></span>
     </button>
 
+    <button class="plaque" data-mode="frontieres">
+      <span class="glyphe">⛊</span>
+      <span class="texte">
+        <span class="nom">Frontières</span>
+        <span class="detail" id="nbFrontieres"></span>
+      </span>
+      <span class="record" id="recFrontieres"></span>
+    </button>
+
     <button class="plaque" data-mode="carteusa">
       <span class="glyphe">◈</span>
       <span class="texte">
@@ -234,6 +243,15 @@ h1{
         <span class="detail">Reconnaître l'État surligné</span>
       </span>
       <span class="record" id="recCarteUsa"></span>
+    </button>
+
+    <button class="plaque" data-mode="frontieresusa">
+      <span class="glyphe">⛉</span>
+      <span class="texte">
+        <span class="nom">Frontières des États-Unis</span>
+        <span class="detail" id="nbFrontieresUsa"></span>
+      </span>
+      <span class="record" id="recFrontieresUsa"></span>
     </button>
 
     <div class="taille" id="taille">
@@ -376,6 +394,10 @@ const CARTES={"FJ":[0.0,277.8,1000.0,284.1],"TZ":[581.5,236.0,612.0,265.9],"CA":
 const CARTESUS={"Minnesota":["MN",711.3,269.7,785.1,342.0],"Montana":["MT",531.8,274.4,646.4,331.4],"Dakota du Nord":["ND",645.8,274.4,717.9,311.8],"Hawaï":["HI",114.4,603.0,162.0,643.7],"Idaho":["ID",520.8,274.4,579.4,360.5],"Washington":["WA",449.4,274.4,523.6,316.3],"Arizona":["AZ",543.5,421.6,598.6,491.3],"Californie":["CA",452.1,360.4,549.7,476.6],"Colorado":["CO",598.5,372.6,665.4,421.8],"Nevada":["NV",494.1,360.4,551.1,445.6],"Nouveau-Mexique":["NM",598.6,421.7,656.2,491.2],"Oregon":["OR",450.8,307.8,527.9,360.5],"Utah":["UT",551.0,360.4,598.6,421.8],"Wyoming":["WY",579.1,322.8,646.3,372.6],"Arkansas":["AR",736.1,427.4,783.5,470.7],"Iowa":["IA",717.1,341.7,778.8,380.4],"Kansas":["KS",665.3,384.9,736.3,421.8],"Missouri":["MO",725.0,377.4,788.8,433.7],"Nebraska":["NE",646.2,348.1,729.5,384.9],"Oklahoma":["OK",656.2,421.7,738.0,463.0],"Dakota du Sud":["SD",646.0,311.0,718.8,354.4],"Louisiane":["LA",741.5,470.3,787.7,518.5],"Texas":["TX",621.6,427.9,747.0,558.7],"Connecticut":["CT",935.8,359.7,953.9,373.2],"Massachusetts":["MA",937.7,349.5,972.1,366.8],"New Hampshire":["NH",946.8,319.8,964.9,351.6],"Rhode Island":["RI",953.4,360.1,960.4,368.7],"Vermont":["VT",938.3,323.4,956.7,351.4],"Alabama":["AL",795.0,446.3,828.9,504.3],"Floride":["FL",802.8,495.5,875.1,568.1],"Géorgie":["GA",822.0,446.5,867.4,503.4],"Mississippi":["MS",764.8,446.0,798.4,505.7],"Caroline du Sud":["SC",843.7,444.1,889.4,482.7],"Illinois":["IL",765.8,354.2,808.5,422.3],"Indiana":["IN",798.8,363.3,829.9,412.1],"Kentucky":["KY",785.0,395.9,856.8,427.9],"Caroline du Nord":["NC",834.4,426.8,916.4,460.3],"Ohio":["OH",829.6,356.4,870.7,404.4],"Tennessee":["TN",777.9,425.8,859.6,446.6],"Virginie":["VA",840.6,392.2,919.7,427.4],"Wisconsin":["WI",752.6,295.2,815.9,354.3],"Virginie-Occidentale":["WV",851.0,377.1,897.4,419.4],"Delaware":["DE",915.8,386.8,922.9,404.0],"Maryland":["MD",880.6,388.3,922.9,410.2],"New Jersey":["NJ",918.1,368.3,933.7,397.9],"New York":["NY",877.8,323.5,952.5,377.2],"Pennsylvanie":["PA",870.7,353.7,926.4,388.4],"Maine":["ME",960.7,293.5,1000.0,347.1],"Michigan":["MI",776.3,283.0,855.3,364.3],"Alaska":["AK",0.0,0.0,398.9,208.1]};
 const US_H=644;
 
+const VOISINS={"TZ":["BI","CD","KE","MW","MZ","RW","UG","ZM"],"CD":["AO","BI","CF","CG","RW","SS","TZ","UG","ZM"],"KE":["ET","SO","SS","TZ","UG"],"ZM":["AO","BW","CD","MW","MZ","NA","TZ","ZW"],"MW":["MZ","TZ","ZM"],"MZ":["MW","SZ","TZ","ZA","ZM","ZW"],"BI":["CD","RW","TZ"],"UG":["CD","KE","RW","SS","TZ"],"RW":["BI","CD","TZ","UG"],"MR":["DZ","ML","SN"],"DZ":["LY","MA","ML","MR","NE","TN"],"MA":["DZ"],"CA":["US"],"US":["CA","MX"],"MX":["BZ","GT","US"],"KZ":["CN","KG","RU","TM","UZ"],"UZ":["AF","KG","KZ","TJ","TM"],"RU":["AZ","BY","CN","EE","FI","GE","KP","KZ","LT","LV","MN","NO","PL","UA"],"KG":["CN","KZ","TJ","UZ"],"TM":["AF","IR","KZ","UZ"],"CN":["AF","BT","IN","KG","KP","KZ","LA","MM","MN","NP","PK","RU","TJ","VN"],"AF":["CN","IR","PK","TJ","TM","UZ"],"TJ":["AF","CN","KG","UZ"],"PG":["ID"],"ID":["MY","PG","TL"],"TL":["ID"],"MY":["BN","ID","TH"],"AR":["BO","BR","CL","PY","UY"],"CL":["AR","BO","PE"],"UY":["AR","BR"],"BR":["AR","BO","CO","FR","GY","PE","PY","SR","UY","VE"],"BO":["AR","BR","CL","PE","PY"],"PY":["AR","BO","BR"],"PE":["BO","BR","CL","CO","EC"],"CF":["CD","CG","CM","SD","SS","TD"],"CG":["AO","CD","CF","CM","GA"],"AO":["CD","CG","NA","ZM"],"SS":["CD","CF","ET","KE","SD","UG"],"SO":["ET","KE"],"ET":["DJ","ER","KE","SD","SO","SS"],"SD":["CF","EG","ER","ET","LY","SS","TD"],"TD":["CF","CM","LY","NE","SD"],"ER":["DJ","ET","SD"],"EG":["IL","JO","LY","PS","SD"],"LY":["DZ","EG","NE","SD","TD","TN"],"NE":["BF","BJ","CM","DZ","LY","ML","NG","TD"],"CM":["CF","CG","GA","GQ","NE","NG","TD"],"HT":["DO"],"DO":["HT"],"NO":["FI","RU","SE"],"KP":["CN","KR","RU"],"MN":["CN","RU"],"BY":["LT","LV","PL","RU","UA"],"UA":["BY","HU","MD","PL","RO","RU","SK"],"PL":["BY","CZ","DE","LT","RU","SK","UA"],"LT":["BY","LV","PL","RU"],"LV":["BY","EE","LT","RU"],"EE":["LV","RU"],"AZ":["AM","GE","IR","RU","TR"],"GE":["AM","AZ","RU","TR"],"FI":["NO","RU","SE"],"SE":["FI","NO"],"ZA":["BW","LS","MZ","NA","SZ","ZW"],"LS":["ZA"],"ZW":["BW","MZ","ZA","ZM"],"BW":["NA","ZA","ZM","ZW"],"NA":["AO","BW","ZA","ZM"],"SZ":["MZ","ZA"],"GT":["BZ","HN","MX","SV"],"BZ":["GT","MX"],"CO":["BR","EC","PA","PE","VE"],"VE":["BR","CO","GY"],"GY":["BR","SR","VE"],"SR":["BR","FR","GY"],"FR":["AD","BE","BR","CH","DE","ES","IT","LU","MC","SR"],"EC":["CO","PE"],"PA":["CO","CR"],"CR":["NI","PA"],"NI":["CR","HN"],"HN":["GT","NI","SV"],"SV":["GT","HN"],"DE":["AT","BE","CH","CZ","DK","FR","LU","NL","PL"],"CH":["AT","DE","FR","IT","LI"],"LU":["BE","DE","FR"],"BE":["DE","FR","LU","NL"],"ES":["AD","FR","PT"],"IT":["AT","CH","FR","SI","SM"],"SN":["GM","GN","GW","ML","MR"],"ML":["BF","CI","DZ","GN","MR","NE","SN"],"GN":["CI","GW","LR","ML","SL","SN"],"GW":["GN","SN"],"GM":["SN"],"CI":["BF","GH","GN","LR","ML"],"BF":["BJ","CI","GH","ML","NE","TG"],"BJ":["BF","NE","NG","TG"],"NG":["BJ","CM","NE"],"TG":["BF","BJ","GH"],"GA":["CG","CM","GQ"],"GQ":["CM","GA"],"GH":["BF","CI","TG"],"LR":["CI","GN","SL"],"SL":["GN","LR"],"IL":["EG","JO","LB","PS","SY"],"LB":["IL","SY"],"PS":["EG","IL","JO"],"JO":["EG","IL","IQ","PS","SA","SY"],"SY":["IL","IQ","JO","LB","TR"],"TN":["DZ","LY"],"IQ":["IR","JO","KW","SA","SY","TR"],"SA":["AE","IQ","JO","KW","OM","QA","YE"],"AE":["OM","SA"],"OM":["AE","SA","YE"],"QA":["SA"],"KW":["IQ","SA"],"IR":["AF","AM","AZ","IQ","PK","TM","TR"],"TR":["AM","AZ","BG","GE","GR","IQ","IR","SY"],"YE":["OM","SA"],"KH":["LA","TH","VN"],"TH":["KH","LA","MM","MY"],"LA":["CN","KH","MM","TH","VN"],"VN":["CN","KH","LA"],"MM":["BD","CN","IN","LA","TH"],"IN":["BD","BT","CN","MM","NP","PK"],"BD":["IN","MM"],"KR":["KP"],"BT":["CN","IN"],"NP":["CN","IN"],"PK":["AF","CN","IN","IR"],"AM":["AZ","GE","IR","TR"],"HU":["AT","HR","RO","RS","SI","SK","UA"],"MD":["RO","UA"],"RO":["BG","HU","MD","RS","UA"],"SK":["AT","CZ","HU","PL","UA"],"CZ":["AT","DE","PL","SK"],"AT":["CH","CZ","DE","HU","IT","LI","SI","SK"],"SI":["AT","HR","HU","IT"],"HR":["BA","HU","ME","RS","SI"],"RS":["BA","BG","HR","HU","ME","MK","RO","XK"],"BG":["GR","MK","RO","RS","TR"],"NL":["BE","DE"],"DK":["DE"],"GR":["AL","BG","MK","TR"],"MK":["AL","BG","GR","RS","XK"],"AL":["GR","ME","MK","XK"],"ME":["AL","BA","HR","RS","XK"],"XK":["AL","ME","MK","RS"],"BA":["HR","ME","RS"],"PT":["ES"],"IE":["GB"],"GB":["IE"],"BN":["MY"],"DJ":["ER","ET"],"AD":["ES","FR"],"MC":["FR"],"LI":["AT","CH"],"SM":["IT"]};
+
+const VOISINSUS={"Minnesota":["Dakota du Nord","Dakota du Sud","Iowa","Wisconsin"],"Dakota du Nord":["Dakota du Sud","Minnesota","Montana"],"Iowa":["Dakota du Sud","Illinois","Minnesota","Missouri","Nebraska","Wisconsin"],"Dakota du Sud":["Dakota du Nord","Iowa","Minnesota","Montana","Nebraska","Wyoming"],"Wisconsin":["Illinois","Iowa","Michigan","Minnesota"],"Michigan":["Indiana","Ohio","Wisconsin"],"Montana":["Dakota du Nord","Dakota du Sud","Idaho","Wyoming"],"Idaho":["Montana","Nevada","Oregon","Utah","Washington","Wyoming"],"Wyoming":["Colorado","Dakota du Sud","Idaho","Montana","Nebraska","Utah"],"Washington":["Idaho","Oregon"],"Nevada":["Arizona","Californie","Idaho","Oregon","Utah"],"Oregon":["Californie","Idaho","Nevada","Washington"],"Utah":["Arizona","Colorado","Idaho","Nevada","Nouveau-Mexique","Wyoming"],"Arizona":["Californie","Colorado","Nevada","Nouveau-Mexique","Utah"],"Californie":["Arizona","Nevada","Oregon"],"Colorado":["Arizona","Kansas","Nebraska","Nouveau-Mexique","Oklahoma","Utah","Wyoming"],"Nouveau-Mexique":["Arizona","Colorado","Oklahoma","Texas","Utah"],"Kansas":["Colorado","Missouri","Nebraska","Oklahoma"],"Nebraska":["Colorado","Dakota du Sud","Iowa","Kansas","Missouri","Wyoming"],"Oklahoma":["Arkansas","Colorado","Kansas","Missouri","Nouveau-Mexique","Texas"],"Texas":["Arkansas","Louisiane","Nouveau-Mexique","Oklahoma"],"Arkansas":["Louisiane","Mississippi","Missouri","Oklahoma","Tennessee","Texas"],"Missouri":["Arkansas","Illinois","Iowa","Kansas","Kentucky","Nebraska","Oklahoma","Tennessee"],"Louisiane":["Arkansas","Mississippi","Texas"],"Mississippi":["Alabama","Arkansas","Louisiane","Tennessee"],"Tennessee":["Alabama","Arkansas","Caroline du Nord","Géorgie","Kentucky","Mississippi","Missouri","Virginie"],"Illinois":["Indiana","Iowa","Kentucky","Missouri","Wisconsin"],"Kentucky":["Illinois","Indiana","Missouri","Ohio","Tennessee","Virginie","Virginie-Occidentale"],"Connecticut":["Massachusetts","New York","Rhode Island"],"Massachusetts":["Connecticut","New Hampshire","New York","Rhode Island","Vermont"],"Rhode Island":["Connecticut","Massachusetts"],"New York":["Connecticut","Massachusetts","New Jersey","Pennsylvanie","Vermont"],"New Hampshire":["Maine","Massachusetts","Vermont"],"Vermont":["Massachusetts","New Hampshire","New York"],"Maine":["New Hampshire"],"Alabama":["Floride","Géorgie","Mississippi","Tennessee"],"Floride":["Alabama","Géorgie"],"Géorgie":["Alabama","Caroline du Nord","Caroline du Sud","Floride","Tennessee"],"Caroline du Sud":["Caroline du Nord","Géorgie"],"Caroline du Nord":["Caroline du Sud","Géorgie","Tennessee","Virginie"],"Indiana":["Illinois","Kentucky","Michigan","Ohio"],"Ohio":["Indiana","Kentucky","Michigan","Pennsylvanie","Virginie-Occidentale"],"Virginie":["Caroline du Nord","Kentucky","Maryland","Tennessee","Virginie-Occidentale"],"Virginie-Occidentale":["Kentucky","Maryland","Ohio","Pennsylvanie","Virginie"],"Pennsylvanie":["Delaware","Maryland","New Jersey","New York","Ohio","Virginie-Occidentale"],"Maryland":["Delaware","Pennsylvanie","Virginie","Virginie-Occidentale"],"Delaware":["Maryland","New Jersey","Pennsylvanie"],"New Jersey":["Delaware","New York","Pennsylvanie"]};
+
 /* ---------- Outils ---------- */
 const CLE='mappemonde.v1';
 const LONGUEUR=10;
@@ -391,7 +413,7 @@ function ecrire(d){
   try{localStorage.setItem(CLE,JSON.stringify(d));}catch(e){/* stockage indisponible */}
 }
 
-const LIBELLES={capitales:'Capitales du monde',drapeaux:'Drapeaux',carte:'Carte du monde',usa:'États américains',carteusa:'Carte des États-Unis'};
+const LIBELLES={capitales:'Capitales du monde',drapeaux:'Drapeaux',carte:'Carte du monde',usa:'États américains',carteusa:'Carte des États-Unis',frontieres:'Frontières',frontieresusa:'Frontières des États-Unis'};
 
 /* ---------- Fabrication des questions ---------- */
 function fabrique(mode){
@@ -404,6 +426,46 @@ function fabrique(mode){
            bonne:etat[0],options:melange([etat[0],...leurres.map(e=>e[0])])}
         : {consigne:'Quelle est sa capitale ?',question:etat[0],
            bonne:etat[1],options:melange([etat[1],...leurres.map(e=>e[1])])};
+    });
+  }
+  if(mode==='frontieresusa'){
+    const sujets=ETATS.filter(e=>VOISINSUS[e[0]]);
+    return melange(sujets).slice(0,LONGUEUR).map(etat=>{
+      const vs=VOISINSUS[etat[0]];
+      const exclus=new Set([etat[0]].concat(vs));
+      const hors=ETATS.filter(e=>!exclus.has(e[0]));
+      const base={etat:CARTESUS[etat[0]],question:etat[0]};
+      if(vs.length>=3){
+        const trois=melange(vs).slice(0,3);
+        const intrus=melange(hors)[0][0];
+        return Object.assign({},base,{consigne:'Lequel ne borde PAS cet État ?',
+          bonne:intrus,options:melange([intrus].concat(trois))});
+      }
+      const bon=melange(vs)[0];
+      const leurres=melange(hors).slice(0,3).map(e=>e[0]);
+      return Object.assign({},base,{consigne:'Lequel de ces États le borde ?',
+        bonne:bon,options:melange([bon].concat(leurres))});
+    });
+  }
+  if(mode==='frontieres'){
+    const nom=c=>{const p=PAYS.find(x=>x[0]===c);return p?p[1]:c;};
+    const sujets=PAYS.filter(p=>VOISINS[p[0]]);
+    return melange(sujets).slice(0,LONGUEUR).map(pays=>{
+      const vs=VOISINS[pays[0]];
+      const exclus=new Set([pays[0]].concat(vs));
+      let horsZone=PAYS.filter(p=>!exclus.has(p[0])&&p[3]===pays[3]);
+      if(horsZone.length<3)horsZone=PAYS.filter(p=>!exclus.has(p[0]));
+      const base={carte:CARTES[pays[0]]?pays[0]:null,question:pays[1]};
+      if(vs.length>=3){
+        const trois=melange(vs).slice(0,3).map(nom);
+        const intrus=melange(horsZone)[0][1];
+        return Object.assign({},base,{consigne:'Lequel ne borde PAS ce pays ?',
+          bonne:intrus,options:melange([intrus].concat(trois))});
+      }
+      const bon=nom(melange(vs)[0]);
+      const leurres=melange(horsZone).slice(0,3).map(p=>p[1]);
+      return Object.assign({},base,{consigne:'Lequel de ces pays le borde ?',
+        bonne:bon,options:melange([bon].concat(leurres))});
     });
   }
   if(mode==='carteusa'){
@@ -467,7 +529,7 @@ function cadrer(cible,b,us){
   if(el)el.classList.add('cible');
   const cx=(b[0]+b[2])/2, cy=(b[1]+b[3])/2;
   const etendue=Math.max(b[2]-b[0],(b[3]-b[1])/0.5);
-  const w=Math.min(Math.max(etendue*3.2,170),1000);
+  const w=Math.min(Math.max(etendue*3.2,45),1000);
   const h=w*0.5;
   const vx=Math.min(Math.max(cx-w/2,0),Math.max(1000-w,0));
   const vy=Math.min(Math.max(cy-h/2,0),Math.max(H-h,0));
@@ -580,8 +642,12 @@ function rafraichirAccueil(){
   $('recCarte').innerHTML=aff('carte');
   $('recUsa').innerHTML=aff('usa');
   $('recCarteUsa').innerHTML=aff('carteusa');
+  $('recFrontieres').innerHTML=aff('frontieres');
+  $('recFrontieresUsa').innerHTML=aff('frontieresusa');
   $('nbPays').textContent=PAYS.length+' pays, tous continents';
   document.querySelector('[data-mode="carte"] .detail').textContent=Object.keys(CARTES).length+' pays cartographi\u00e9s';
+  $('nbFrontieres').textContent=Object.keys(VOISINS).length+' pays \u00e0 fronti\u00e8res';
+  $('nbFrontieresUsa').textContent=Object.keys(VOISINSUS).length+' \u00c9tats \u00e0 fronti\u00e8res';
   $('totalParties').textContent=d.parties?d.parties+' manche'+(d.parties>1?'s':'')+' jouée'+(d.parties>1?'s':''):'';
 }
 

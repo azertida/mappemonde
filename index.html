@@ -446,7 +446,7 @@ function fabrique(mode){
       const hors=melange(ETATS.filter(e=>d2.has(e[0])))
         .concat(melange(ETATS.filter(e=>!exclus.has(e[0])&&!d2.has(e[0]))));
       const base={etat:CARTESUS[etat[0]],question:etat[0]};
-      if(vs.length>=3){
+      if(vs.length>=3&&Math.random()<0.65){
         const trois=melange(vs).slice(0,3);
         const intrus=hors[0][0];
         return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',
@@ -471,7 +471,7 @@ function fabrique(mode){
         .concat(melange(PAYS.filter(p=>!exclus.has(p[0])&&!d2.has(p[0])&&p[3]===pays[3])))
         .concat(melange(PAYS.filter(p=>!exclus.has(p[0])&&!d2.has(p[0])&&p[3]!==pays[3])));
       const base={carte:CARTES[pays[0]]?pays[0]:null,question:pays[1]};
-      if(vs.length>=3){
+      if(vs.length>=3&&Math.random()<0.65){
         const trois=melange(vs).slice(0,3).map(nom);
         const intrus=horsZone[0][1];
         return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',

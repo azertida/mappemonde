@@ -113,6 +113,13 @@ h1{
 .carte-boite path.cible{fill:var(--parchemin)}
 .carte-boite circle{fill:none;stroke:var(--parchemin);opacity:.5}
 
+.consigne.intrus,.consigne.voisin{
+  display:inline-block;padding:8px 15px;border-radius:3px;
+  letter-spacing:.08em;margin-bottom:16px;
+}
+.consigne.intrus{background:#42251E;color:#F6CFC5;border:1px solid var(--oxyde)}
+.consigne.voisin{background:#1E463C;color:#D9F0D3;border:1px solid var(--sonde)}
+
 .reponses{display:flex;flex-direction:column;gap:8px}
 .reponse{
   background:var(--plateau);border:1px solid #2A6072;border-left:4px solid var(--trait);
@@ -442,12 +449,12 @@ function fabrique(mode){
       if(vs.length>=3){
         const trois=melange(vs).slice(0,3);
         const intrus=hors[0][0];
-        return Object.assign({},base,{consigne:'Lequel ne borde PAS cet État ?',
+        return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',
           bonne:intrus,options:melange([intrus].concat(trois))});
       }
       const bon=melange(vs)[0];
       const leurres=hors.slice(0,3).map(e=>e[0]);
-      return Object.assign({},base,{consigne:'Lequel de ces États le borde ?',
+      return Object.assign({},base,{consigne:'Voisin',forme:'voisin',
         bonne:bon,options:melange([bon].concat(leurres))});
     });
   }
@@ -467,12 +474,12 @@ function fabrique(mode){
       if(vs.length>=3){
         const trois=melange(vs).slice(0,3).map(nom);
         const intrus=horsZone[0][1];
-        return Object.assign({},base,{consigne:'Lequel ne borde PAS ce pays ?',
+        return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',
           bonne:intrus,options:melange([intrus].concat(trois))});
       }
       const bon=nom(melange(vs)[0]);
       const leurres=horsZone.slice(0,3).map(p=>p[1]);
-      return Object.assign({},base,{consigne:'Lequel de ces pays le borde ?',
+      return Object.assign({},base,{consigne:'Voisin',forme:'voisin',
         bonne:bon,options:melange([bon].concat(leurres))});
     });
   }
@@ -561,6 +568,7 @@ function poser(){
   $('drapeau').hidden=!q.drapeau;
   $('drapeau').textContent=q.drapeau||'';
   $('consigne').textContent=q.consigne;
+  $('consigne').className='consigne'+(q.forme?' '+q.forme:'');
   $('question').textContent=q.question;
   $('question').hidden=!q.question;
   $('verdict').textContent='';

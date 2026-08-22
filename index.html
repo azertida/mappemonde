@@ -111,6 +111,8 @@ h1{
 .carte-boite path{fill:#27596B;stroke:#0B1F2A;stroke-width:.7;vector-effect:non-scaling-stroke}
 .carte-boite path.fond{fill:#1D4353}
 .carte-boite path.cible{fill:var(--parchemin)}
+.carte-boite path.voisinok{fill:var(--sonde)}
+.carte-boite path.pasvoisin{fill:var(--oxyde)}
 .carte-boite circle{fill:none;stroke:var(--parchemin);opacity:.5}
 
 .consigne.intrus,.consigne.voisin{
@@ -405,6 +407,9 @@ const VOISINS={"TZ":["BI","CD","KE","MW","MZ","RW","UG","ZM"],"CD":["AO","BI","C
 
 const VOISINSUS={"Minnesota":["Dakota du Nord","Dakota du Sud","Iowa","Wisconsin"],"Dakota du Nord":["Dakota du Sud","Minnesota","Montana"],"Iowa":["Dakota du Sud","Illinois","Minnesota","Missouri","Nebraska","Wisconsin"],"Dakota du Sud":["Dakota du Nord","Iowa","Minnesota","Montana","Nebraska","Wyoming"],"Wisconsin":["Illinois","Iowa","Michigan","Minnesota"],"Michigan":["Indiana","Ohio","Wisconsin"],"Montana":["Dakota du Nord","Dakota du Sud","Idaho","Wyoming"],"Idaho":["Montana","Nevada","Oregon","Utah","Washington","Wyoming"],"Wyoming":["Colorado","Dakota du Sud","Idaho","Montana","Nebraska","Utah"],"Washington":["Idaho","Oregon"],"Nevada":["Arizona","Californie","Idaho","Oregon","Utah"],"Oregon":["Californie","Idaho","Nevada","Washington"],"Utah":["Arizona","Colorado","Idaho","Nevada","Nouveau-Mexique","Wyoming"],"Arizona":["Californie","Colorado","Nevada","Nouveau-Mexique","Utah"],"Californie":["Arizona","Nevada","Oregon"],"Colorado":["Arizona","Kansas","Nebraska","Nouveau-Mexique","Oklahoma","Utah","Wyoming"],"Nouveau-Mexique":["Arizona","Colorado","Oklahoma","Texas","Utah"],"Kansas":["Colorado","Missouri","Nebraska","Oklahoma"],"Nebraska":["Colorado","Dakota du Sud","Iowa","Kansas","Missouri","Wyoming"],"Oklahoma":["Arkansas","Colorado","Kansas","Missouri","Nouveau-Mexique","Texas"],"Texas":["Arkansas","Louisiane","Nouveau-Mexique","Oklahoma"],"Arkansas":["Louisiane","Mississippi","Missouri","Oklahoma","Tennessee","Texas"],"Missouri":["Arkansas","Illinois","Iowa","Kansas","Kentucky","Nebraska","Oklahoma","Tennessee"],"Louisiane":["Arkansas","Mississippi","Texas"],"Mississippi":["Alabama","Arkansas","Louisiane","Tennessee"],"Tennessee":["Alabama","Arkansas","Caroline du Nord","Géorgie","Kentucky","Mississippi","Missouri","Virginie"],"Illinois":["Indiana","Iowa","Kentucky","Missouri","Wisconsin"],"Kentucky":["Illinois","Indiana","Missouri","Ohio","Tennessee","Virginie","Virginie-Occidentale"],"Connecticut":["Massachusetts","New York","Rhode Island"],"Massachusetts":["Connecticut","New Hampshire","New York","Rhode Island","Vermont"],"Rhode Island":["Connecticut","Massachusetts"],"New York":["Connecticut","Massachusetts","New Jersey","Pennsylvanie","Vermont"],"New Hampshire":["Maine","Massachusetts","Vermont"],"Vermont":["Massachusetts","New Hampshire","New York"],"Maine":["New Hampshire"],"Alabama":["Floride","Géorgie","Mississippi","Tennessee"],"Floride":["Alabama","Géorgie"],"Géorgie":["Alabama","Caroline du Nord","Caroline du Sud","Floride","Tennessee"],"Caroline du Sud":["Caroline du Nord","Géorgie"],"Caroline du Nord":["Caroline du Sud","Géorgie","Tennessee","Virginie"],"Indiana":["Illinois","Kentucky","Michigan","Ohio"],"Ohio":["Indiana","Kentucky","Michigan","Pennsylvanie","Virginie-Occidentale"],"Virginie":["Caroline du Nord","Kentucky","Maryland","Tennessee","Virginie-Occidentale"],"Virginie-Occidentale":["Kentucky","Maryland","Ohio","Pennsylvanie","Virginie"],"Pennsylvanie":["Delaware","Maryland","New Jersey","New York","Ohio","Virginie-Occidentale"],"Maryland":["Delaware","Pennsylvanie","Virginie","Virginie-Occidentale"],"Delaware":["Maryland","New Jersey","Pennsylvanie"],"New Jersey":["Delaware","New York","Pennsylvanie"]};
 
+const FAMILLES={"BJ":["BF","CG","CM","GA","GH","GN","GW","ML","SN"],"BF":["BJ","CG","CM","GA","GH","GN","GW","ML","SN"],"CM":["BF","BJ","CG","GA","GH","GN","GW","ML","SN"],"CG":["BF","BJ","CM","GA","GH","GN","GW","ML","SN"],"GA":["BF","BJ","CG","CM","GH","GN","GW","ML","SN"],"GH":["BF","BJ","BO","CG","CM","ET","GA","GN","GW","LT","ML","MM","SN"],"GN":["BF","BJ","CG","CM","GA","GH","GW","ML","SN"],"GW":["BF","BJ","CG","CM","GA","GH","GN","ML","SN"],"ML":["BF","BJ","CG","CM","GA","GH","GN","GW","SN"],"SN":["BF","BJ","CG","CM","GA","GH","GN","GW","ML"],"EG":["AE","IQ","JO","KW","PS","SY","YE"],"PS":["AE","EG","IQ","JO","KW","SY","YE"],"AE":["EG","IQ","JO","KW","PS","SY","YE"],"KW":["AE","EG","IQ","JO","PS","SY","YE"],"IQ":["AE","EG","JO","KW","PS","SY","YE"],"JO":["AE","EG","IQ","KW","PS","SY","YE"],"SY":["AE","EG","IQ","JO","KW","PS","YE"],"YE":["AE","EG","IQ","JO","KW","PS","SY"],"IE":["CI","IN","IT","NE"],"CI":["IE","IN","IT","NE"],"IT":["CI","IE","IN","MX","NE"],"IN":["CI","IE","IT","NE"],"NE":["CI","IE","IN","IT"],"HT":["BZ","LI"],"BZ":["HT","LI"],"BO":["AM","ET","GH","LT","MM"],"LT":["AM","BO","ET","GH","MM"],"AM":["BO","LT"],"CO":["EC","VE"],"VE":["CO","EC"],"EC":["CO","VE"],"CR":["TH"],"TH":["CR"],"PA":["DO"],"DO":["PA"],"UY":["GR"],"GR":["UY"],"PL":["ID","MC","SG"],"MC":["ID","PL","SG"],"ID":["MC","PL","SG"],"SG":["ID","MC","PL"],"BG":["HU","IR","TJ"],"HU":["BG","IR","TJ"],"NL":["CZ","HR","LU","PY","RS","RU","SK"],"LU":["CZ","HR","NL","PY","RS","RU","SK"],"RU":["CZ","HR","LU","NL","PY","RS","SK"],"RS":["CZ","LU","NL","RU","SK"],"SK":["CZ","LU","NL","RS","RU"],"CZ":["LU","NL","PH","RS","RU","SK"],"AU":["FJ","NZ","TV"],"NZ":["AU","FJ","TV"],"FJ":["AU","NZ","TV"],"RO":["AD","MD","TD"],"TD":["AD","MD","RO"],"MD":["AD","RO","TD"],"AD":["MD","RO","TD"],"BH":["QA"],"QA":["BH"],"CA":["PE"],"PE":["CA"],"MX":["IT"],"LI":["BZ","HT"],"PH":["CZ"],"AT":["LB","LV"],"LV":["AT","LB"],"LB":["AT","LV"],"LS":["SL","UZ"],"UZ":["LS","SL"],"SL":["LS","UZ"],"IR":["BG","HU","TJ"],"TJ":["BG","HU","IR"],"ET":["BO","GH","LT","MM"],"MM":["BO","ET","GH","LT"],"PY":["HR","LU","NL","RU"],"HR":["LU","NL","PY","RU"],"BD":["JP","LA","PW"],"JP":["BD","LA","PW"],"PW":["BD","JP","LA"],"LA":["BD","JP","PW"],"SO":["MA","VN"],"VN":["MA","SO"],"MA":["SO","VN"],"AR":["GT","HN","NI","SV"],"NI":["AR","GT","HN","SV"],"HN":["AR","GT","NI","SV"],"SV":["AR","GT","HN","NI"],"GT":["AR","HN","NI","SV"],"TV":["AU","FJ","NZ"],"LR":["MY","US"],"MY":["LR","US"],"US":["LR","MY"]};
+const JUMEAUX={"MC":["ID"],"ID":["MC"],"RO":["TD"],"TD":["RO"]};
+
 /* ---------- Outils ---------- */
 const CLE='mappemonde.v1';
 const LONGUEUR=10;
@@ -450,11 +455,13 @@ function fabrique(mode){
         const trois=melange(vs).slice(0,3);
         const intrus=hors[0][0];
         return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',
+          revele:{sujet:etat[0],ok:vs,non:[intrus]},
           bonne:intrus,options:melange([intrus].concat(trois))});
       }
       const bon=melange(vs)[0];
       const leurres=hors.slice(0,3).map(e=>e[0]);
       return Object.assign({},base,{consigne:'Voisin',forme:'voisin',
+        revele:{sujet:etat[0],ok:vs,non:leurres},
         bonne:bon,options:melange([bon].concat(leurres))});
     });
   }
@@ -472,15 +479,17 @@ function fabrique(mode){
         .concat(melange(PAYS.filter(p=>!exclus.has(p[0])&&!d2.has(p[0])&&p[3]!==pays[3])));
       const base={carte:CARTES[pays[0]]?pays[0]:null,question:pays[1]};
       if(vs.length>=3&&Math.random()<0.65){
-        const trois=melange(vs).slice(0,3).map(nom);
-        const intrus=horsZone[0][1];
+        const trois=melange(vs).slice(0,3);
+        const intr=horsZone[0];
         return Object.assign({},base,{consigne:'Sans frontière',forme:'intrus',
-          bonne:intrus,options:melange([intrus].concat(trois))});
+          revele:{sujet:pays[0],ok:vs,non:[intr[0]]},
+          bonne:intr[1],options:melange([intr[1]].concat(trois.map(nom)))});
       }
-      const bon=nom(melange(vs)[0]);
-      const leurres=horsZone.slice(0,3).map(p=>p[1]);
+      const bonC=melange(vs)[0];
+      const faux=horsZone.slice(0,3);
       return Object.assign({},base,{consigne:'Voisin',forme:'voisin',
-        bonne:bon,options:melange([bon].concat(leurres))});
+        revele:{sujet:pays[0],ok:vs,non:faux.map(p=>p[0])},
+        bonne:nom(bonC),options:melange([nom(bonC)].concat(faux.map(p=>p[1])))});
     });
   }
   if(mode==='carteusa'){
@@ -506,8 +515,15 @@ function fabrique(mode){
     const vivier=memeZone.length>=3?memeZone:PAYS.filter(p=>p[0]!==pays[0]);
     const leurres=melange(vivier).slice(0,3);
     if(mode==='drapeaux'){
+      const interdits=new Set([pays[0]].concat(JUMEAUX[pays[0]]||[]));
+      const fam=new Set((FAMILLES[pays[0]]||[]).filter(c=>!interdits.has(c)));
+      const dispo=PAYS.filter(p=>!interdits.has(p[0]));
+      const vivierD=melange(dispo.filter(p=>fam.has(p[0])))
+        .concat(melange(dispo.filter(p=>!fam.has(p[0])&&p[3]===pays[3])))
+        .concat(melange(dispo.filter(p=>!fam.has(p[0])&&p[3]!==pays[3])));
+      const l3=vivierD.slice(0,3);
       return {drapeau:drapeauDe(pays[0]),consigne:'Quel est ce pays ?',question:'',
-              bonne:pays[1],options:melange([pays[1],...leurres.map(p=>p[1])])};
+              bonne:pays[1],options:melange([pays[1],...l3.map(p=>p[1])])};
     }
     const inverse=Math.random()<.35;
     return inverse
@@ -539,7 +555,7 @@ function cadrer(cible,b,us){
   $('carteus').style.display=us?'block':'none';
   const svg=us?$('carteus'):$('carte');
   const H=us?US_H:394;
-  document.querySelectorAll('.carte-boite path.cible').forEach(p=>p.classList.remove('cible'));
+  document.querySelectorAll('.carte-boite path').forEach(p=>p.classList.remove('cible','voisinok','pasvoisin'));
   const el=document.getElementById(cible);
   if(el)el.classList.add('cible');
   const cx=(b[0]+b[2])/2, cy=(b[1]+b[3])/2;
@@ -554,6 +570,40 @@ function cadrer(cible,b,us){
   rep.setAttribute('cy',cy);
   rep.setAttribute('r',Math.max(Math.max(b[2]-b[0],b[3]-b[1])/2+w*0.025,w*0.035));
   rep.setAttribute('stroke-width',w*0.006);
+}
+
+function reveler(q){
+  if(!q.revele||(!q.carte&&!q.etat))return;
+  const us=!!q.etat;
+  const boite=c=>us?(CARTESUS[c]?CARTESUS[c].slice(1):null):(CARTES[c]||null);
+  const ident=c=>us?(CARTESUS[c]?'u'+CARTESUS[c][0]:null):(CARTES[c]?'z'+c:null);
+  const bs=[];
+  const sb=boite(q.revele.sujet); if(sb)bs.push(sb);
+  [['ok','voisinok'],['non','pasvoisin']].forEach(function(paire){
+    (q.revele[paire[0]]||[]).forEach(function(c){
+      const el=document.getElementById(ident(c));
+      const b=boite(c);
+      if(el&&b){el.classList.add(paire[1]);bs.push(b);}
+    });
+  });
+  if(!bs.length)return;
+  const x0=Math.min.apply(null,bs.map(b=>b[0])),y0=Math.min.apply(null,bs.map(b=>b[1]));
+  const x1=Math.max.apply(null,bs.map(b=>b[2])),y1=Math.max.apply(null,bs.map(b=>b[3]));
+  const marge=Math.max(x1-x0,y1-y0)*0.12+6;
+  const w=Math.min(Math.max((x1-x0)+marge*2,((y1-y0)+marge*2)/0.5,45),1000);
+  const h=w*0.5, H=us?US_H:394;
+  const cx=(x0+x1)/2, cy=(y0+y1)/2;
+  const svg=us?$('carteus'):$('carte');
+  svg.setAttribute('viewBox',
+    Math.min(Math.max(cx-w/2,0),Math.max(1000-w,0))+' '+
+    Math.min(Math.max(cy-h/2,0),Math.max(H-h,0))+' '+w+' '+h);
+  const rep=us?$('repereus'):$('repere');
+  if(sb){
+    rep.setAttribute('cx',(sb[0]+sb[2])/2);
+    rep.setAttribute('cy',(sb[1]+sb[3])/2);
+    rep.setAttribute('r',Math.max(Math.max(sb[2]-sb[0],sb[3]-sb[1])/2+w*0.02,w*0.03));
+    rep.setAttribute('stroke-width',w*0.005);
+  }
 }
 
 function poser(){
@@ -602,6 +652,8 @@ function repondre(bouton,choix,q){
     if(b.textContent===q.bonne)b.classList.add('juste');
   });
   if(!juste)bouton.classList.add('faux');
+
+  if(!juste)reveler(q);
 
   $('verdict').innerHTML=juste
     ? 'Exact.'

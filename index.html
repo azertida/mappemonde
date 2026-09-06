@@ -178,6 +178,14 @@ h1{
 .secondaire:hover{background:var(--plateau)}
 
 /* Réglage de la taille du texte */
+.langues{display:flex;gap:8px;margin-top:22px}
+.langues button{
+  flex:1;padding:12px 10px;background:none;color:var(--parchemin);
+  border:1px solid #2A6072;border-radius:2px;font-family:var(--sans);
+  font-size:.95rem;font-weight:600;letter-spacing:.06em;cursor:pointer;
+}
+.langues button[aria-pressed="true"]{background:var(--parchemin);color:var(--abysse);border-color:var(--parchemin)}
+
 .taille{display:flex;align-items:center;gap:10px;margin-top:26px;flex-wrap:wrap}
 .taille .titre{font-size:.9rem;font-weight:600;color:var(--etiquette);
   text-transform:uppercase;letter-spacing:.06em;width:100%}
@@ -284,6 +292,11 @@ h1{
       </span>
       <span class="record" id="recFrontieresEsp"></span>
     </button>
+
+    <div class="langues" id="langues">
+      <button data-langue="fr" aria-pressed="false">Français</button>
+      <button data-langue="es" aria-pressed="false">Español</button>
+    </div>
 
     <div class="taille" id="taille">
       <span class="titre">Taille du texte</span>
@@ -437,6 +450,30 @@ const PAYSETR=["Andorre","France","Gibraltar","Maroc","Portugal"];
 const ETRANGERESP={"Girona":["France","Andorre"],"Lleida":["France","Andorre"],"Huesca":["France"],"Navarra":["France"],"Gipuzkoa":["France"],"Pontevedra":["Portugal"],"Ourense":["Portugal"],"Zamora":["Portugal"],"Salamanca":["Portugal"],"Cáceres":["Portugal"],"Badajoz":["Portugal"],"Huelva":["Portugal"],"Ceuta":["Maroc"],"Melilla":["Maroc"],"Cádiz":["Gibraltar"]};
 const ESP_H=887;
 const VOISINSESP={"Navarra":["Araba","Gipuzkoa","Huesca","La Rioja","Zaragoza"],"Gipuzkoa":["Araba","Bizkaia","Navarra"],"Huesca":["Lleida","Navarra","Zaragoza"],"Zaragoza":["Guadalajara","Huesca","La Rioja","Lleida","Navarra","Soria","Tarragona","Teruel"],"La Rioja":["Araba","Burgos","Navarra","Soria","Zaragoza"],"Araba":["Bizkaia","Burgos","Gipuzkoa","La Rioja","Navarra"],"Bizkaia":["Araba","Burgos","Cantabria","Gipuzkoa"],"Lleida":["Barcelona","Girona","Huesca","Tarragona","Zaragoza"],"Girona":["Barcelona","Lleida"],"Barcelona":["Girona","Lleida","Tarragona"],"Tarragona":["Barcelona","Castelló","Lleida","Teruel","Zaragoza"],"Badajoz":["Ciudad Real","Cáceres","Córdoba","Huelva","Sevilla","Toledo"],"Cáceres":["Badajoz","Ciudad Real","Salamanca","Toledo","Ávila"],"Huelva":["Badajoz","Cádiz","Sevilla"],"Sevilla":["Badajoz","Cádiz","Córdoba","Huelva","Málaga"],"Toledo":["Badajoz","Ciudad Real","Cuenca","Cáceres","Madrid","Ávila"],"Ciudad Real":["Albacete","Badajoz","Cuenca","Cáceres","Córdoba","Jaén","Toledo"],"Córdoba":["Badajoz","Ciudad Real","Granada","Jaén","Málaga","Sevilla"],"Cádiz":["Huelva","Málaga","Sevilla"],"Málaga":["Cádiz","Córdoba","Granada","Sevilla"],"Ourense":["León","Lugo","Pontevedra","Zamora"],"Zamora":["León","Ourense","Salamanca","Valladolid"],"Pontevedra":["A Coruña","Lugo","Ourense"],"Lugo":["A Coruña","Asturias","León","Ourense","Pontevedra"],"León":["Asturias","Cantabria","Lugo","Ourense","Palencia","Valladolid","Zamora"],"Salamanca":["Cáceres","Valladolid","Zamora","Ávila"],"Ávila":["Cáceres","Madrid","Salamanca","Segovia","Toledo","Valladolid"],"Valladolid":["Burgos","León","Palencia","Salamanca","Segovia","Zamora","Ávila"],"A Coruña":["Lugo","Pontevedra"],"Castelló":["Tarragona","Teruel","València"],"Teruel":["Castelló","Cuenca","Guadalajara","Tarragona","València","Zaragoza"],"València":["Alacant","Albacete","Castelló","Cuenca","Teruel"],"Alacant":["Albacete","Murcia","València"],"Albacete":["Alacant","Ciudad Real","Cuenca","Granada","Jaén","Murcia","València"],"Cuenca":["Albacete","Ciudad Real","Guadalajara","Madrid","Teruel","Toledo","València"],"Murcia":["Alacant","Albacete","Almería","Granada"],"Almería":["Granada","Murcia"],"Granada":["Albacete","Almería","Córdoba","Jaén","Murcia","Málaga"],"Jaén":["Albacete","Ciudad Real","Córdoba","Granada"],"Asturias":["Cantabria","León","Lugo"],"Cantabria":["Asturias","Bizkaia","Burgos","León","Palencia"],"Burgos":["Araba","Bizkaia","Cantabria","La Rioja","Palencia","Segovia","Soria","Valladolid"],"Palencia":["Burgos","Cantabria","León","Valladolid"],"Soria":["Burgos","Guadalajara","La Rioja","Segovia","Zaragoza"],"Guadalajara":["Cuenca","Madrid","Segovia","Soria","Teruel","Zaragoza"],"Madrid":["Cuenca","Guadalajara","Segovia","Toledo","Ávila"],"Segovia":["Burgos","Guadalajara","Madrid","Soria","Valladolid","Ávila"]};
+
+/* ---------- langues ---------- */
+const LANGUES_UI=['fr','es'];
+const TRAD={es:{"Albanie":"Albania","Allemagne":"Alemania","Andorre":"Andorra","Autriche":"Austria","Biélorussie":"Bielorrusia","Belgique":"Bélgica","Bosnie-Herzégovine":"Bosnia y Herzegovina","Bulgarie":"Bulgaria","Chypre":"Chipre","Croatie":"Croacia","Danemark":"Dinamarca","Espagne":"España","Estonie":"Estonia","Finlande":"Finlandia","France":"Francia","Grèce":"Grecia","Hongrie":"Hungría","Irlande":"Irlanda","Islande":"Islandia","Italie":"Italia","Lettonie":"Letonia","Lituanie":"Lituania","Luxembourg":"Luxemburgo","Macédoine du Nord":"Macedonia del Norte","Malte":"Malta","Moldavie":"Moldavia","Monténégro":"Montenegro","Norvège":"Noruega","Pays-Bas":"Países Bajos","Pologne":"Polonia","Tchéquie":"Chequia","Roumanie":"Rumanía","Royaume-Uni":"Reino Unido","Russie":"Rusia","Saint-Marin":"San Marino","Serbie":"Serbia","Slovaquie":"Eslovaquia","Slovénie":"Eslovenia","Suède":"Suecia","Suisse":"Suiza","Ukraine":"Ucrania","Turquie":"Turquía","Afghanistan":"Afganistán","Arabie saoudite":"Arabia Saudí","Arménie":"Armenia","Azerbaïdjan":"Azerbaiyán","Bahreïn":"Baréin","Bangladesh":"Bangladés","Bhoutan":"Bután","Birmanie":"Birmania","Brunei":"Brunéi","Cambodge":"Camboya","Chine":"China","Corée du Nord":"Corea del Norte","Corée du Sud":"Corea del Sur","Émirats arabes unis":"Emiratos Árabes Unidos","Géorgie":"Georgia","Inde":"India","Indonésie":"Indonesia","Iran":"Irán","Japon":"Japón","Jordanie":"Jordania","Kazakhstan":"Kazajistán","Kirghizistan":"Kirguistán","Koweït":"Kuwait","Liban":"Líbano","Malaisie":"Malasia","Maldives":"Maldivas","Mongolie":"Mongolia","Népal":"Nepal","Oman":"Omán","Ouzbékistan":"Uzbekistán","Pakistan":"Pakistán","Philippines":"Filipinas","Qatar":"Catar","Singapour":"Singapur","Syrie":"Siria","Tadjikistan":"Tayikistán","Thaïlande":"Tailandia","Timor oriental":"Timor Oriental","Turkménistan":"Turkmenistán","Viêt Nam":"Vietnam","Yémen":"Yemen","Israël":"Israel","Palestine":"Palestina","Taïwan":"Taiwán","Afrique du Sud":"Sudáfrica","Algérie":"Argelia","Bénin":"Benín","Cameroun":"Camerún","Cap-Vert":"Cabo Verde","République centrafricaine":"República Centroafricana","Comores":"Comoras","République démocratique du Congo":"República Democrática del Congo","Côte d'Ivoire":"Costa de Marfil","Égypte":"Egipto","Érythrée":"Eritrea","Eswatini":"Esuatini","Éthiopie":"Etiopía","Gabon":"Gabón","Gambie":"Gambia","Guinée":"Guinea","Guinée-Bissau":"Guinea-Bisáu","Guinée équatoriale":"Guinea Ecuatorial","Kenya":"Kenia","Libye":"Libia","Malawi":"Malaui","Maroc":"Marruecos","Maurice":"Mauricio","Mauritanie":"Mauritania","Namibie":"Namibia","Ouganda":"Uganda","Rwanda":"Ruanda","Sao Tomé-et-Principe":"Santo Tomé y Príncipe","Sénégal":"Senegal","Somalie":"Somalia","Soudan":"Sudán","Soudan du Sud":"Sudán del Sur","Tanzanie":"Tanzania","Tchad":"Chad","Tunisie":"Túnez","Zambie":"Zambia","Zimbabwe":"Zimbabue","Djibouti":"Yibuti","Antigua-et-Barbuda":"Antigua y Barbuda","Argentine":"Argentina","Barbade":"Barbados","Belize":"Belice","Bolivie":"Bolivia","Brésil":"Brasil","Canada":"Canadá","Chili":"Chile","Colombie":"Colombia","Dominique":"Dominica","Salvador":"El Salvador","Équateur":"Ecuador","États-Unis":"Estados Unidos","Grenade":"Granada","Haïti":"Haití","Jamaïque":"Jamaica","Mexique":"México","Panama":"Panamá","Pérou":"Perú","République dominicaine":"República Dominicana","Saint-Christophe-et-Niévès":"San Cristóbal y Nieves","Sainte-Lucie":"Santa Lucía","Saint-Vincent-et-les-Grenadines":"San Vicente y las Granadinas","Suriname":"Surinam","Trinité-et-Tobago":"Trinidad y Tobago","Australie":"Australia","Fidji":"Fiyi","Îles Marshall":"Islas Marshall","Micronésie":"Micronesia","Nouvelle-Zélande":"Nueva Zelanda","Papouasie-Nouvelle-Guinée":"Papúa Nueva Guinea","Îles Salomon":"Islas Salomón","Monaco":"Mónaco","Botswana":"Botsuana","Mali":"Malí","Niger":"Níger","Sierra Leone":"Sierra Leona","Vienne":"Viena","Bruxelles":"Bruselas","Athènes":"Atenas","Moscou":"Moscú","Varsovie":"Varsovia","Lisbonne":"Lisboa","Belgrade":"Belgrado","Stockholm":"Estocolmo","Berne":"Berna","Andorre-la-Vieille":"Andorra la Vieja","Reykjavik":"Reikiavik","Rome":"Roma","Chisinau":"Chisináu","Nicosie":"Nicosia","La Valette":"La Valeta","Kaboul":"Kabul","Riyad":"Riad","Erevan":"Ereván","Bakou":"Bakú","Dacca":"Daca","Thimphou":"Timbu","Pékin":"Pekín","Pyongyang":"Pionyang","Séoul":"Seúl","Abou Dabi":"Abu Dabi","Tbilissi":"Tiflis","New Delhi":"Nueva Delhi","Téhéran":"Teherán","Tokyo":"Tokio","Amman":"Amán","Astana":"Astaná","Bichkek":"Biskek","Beyrouth":"Beirut","Oulan-Bator":"Ulán Bator","Katmandou":"Katmandú","Tachkent":"Taskent","Manille":"Manila","Damas":"Damasco","Douchanbé":"Dusambé","Hanoï":"Hanói","Sanaa":"Saná","Jérusalem":"Jerusalén","Taipei":"Taipéi","Le Caire":"El Cairo","Alger":"Argel","Yaoundé":"Yaundé","Yamoussoukro":"Yamusukro","Addis-Abeba":"Adís Abeba","Nouakchott":"Nuakchot","Ouagadougou":"Uagadugú","N'Djaména":"Yamena","Port-Louis":"Port Louis","São Tomé":"Santo Tomé","Khartoum":"Jartum","Djouba":"Yuba","Tripoli":"Trípoli","La Havane":"La Habana","Saint-Georges":"Saint George","Port-au-Prince":"Puerto Príncipe","Mexico":"Ciudad de México","Asuncion":"Asunción","Saint-Domingue":"Santo Domingo","Port-d'Espagne":"Puerto España","Bogota":"Bogotá","Port Moresby":"Puerto Moresby","Nuku'alofa":"Nukualofa","Port-Vila":"Port Vila","Berlin":"Berlín","Sofia":"Sofía","Tallinn":"Tallin","Paris":"París","Dublin":"Dublín","Vilnius":"Vilna","Skopje":"Skopie","Amsterdam":"Ámsterdam","Prague":"Praga","Ljubljana":"Liubliana","Jakarta":"Yakarta","Vientiane":"Vientián","Achgabat":"Asjabad","Ramallah":"Ramala","Porto-Novo":"Porto Novo","Bissau":"Bisáu","Tunis":"Túnez","Californie":"California","Caroline du Nord":"Carolina del Norte","Caroline du Sud":"Carolina del Sur","Dakota du Nord":"Dakota del Norte","Dakota du Sud":"Dakota del Sur","Floride":"Florida","Hawaï":"Hawái","Louisiane":"Luisiana","Nouveau-Mexique":"Nuevo México","Pennsylvanie":"Pensilvania","Virginie":"Virginia","Virginie-Occidentale":"Virginia Occidental","New York":"Nueva York","New Jersey":"Nueva Jersey","New Hampshire":"Nuevo Hampshire","Bâton-Rouge":"Baton Rouge","Mappemonde":"Mapamundi","Quiz de géographie":"Cuestionario de geografía","Dix questions par manche. Choisis ton terrain.":"Diez preguntas por ronda. Elige tu terreno.","Capitales du monde":"Capitales del mundo","Drapeaux":"Banderas","Reconnaître le pays":"Reconocer el país","Carte du monde":"Mapa del mundo","Reconnaître le pays surligné":"Reconocer el país resaltado","Frontières":"Fronteras","États américains":"Estados de EE. UU.","Les 50 États et leurs capitales":"Los 50 estados y sus capitales","Carte des États-Unis":"Mapa de Estados Unidos","Reconnaître l'État surligné":"Reconocer el estado resaltado","Frontières des États-Unis":"Fronteras de Estados Unidos","Carte des provinces espagnoles":"Mapa de las provincias españolas","Frontières des provinces espagnoles":"Fronteras de las provincias españolas","Taille du texte":"Tamaño del texto","Fonctionne hors ligne · Aucune donnée envoyée":"Funciona sin conexión · No se envía ningún dato","Scores conservés sur cet appareil":"Puntuaciones guardadas en este dispositivo","Quitter":"Salir","Suivant":"Siguiente","Voir le résultat":"Ver el resultado","Rejouer":"Jugar otra vez","Changer de terrain":"Cambiar de terreno","Jamais joué":"Nunca jugado","Record":"Récord","Exact.":"Exacto.","Quelle est sa capitale ?":"¿Cuál es su capital?","De quel pays est-elle la capitale ?":"¿De qué país es la capital?","De quel État est-elle la capitale ?":"¿De qué estado es la capital?","Quel est ce pays ?":"¿Qué país es este?","Quel pays est surligné ?":"¿Qué país está resaltado?","Quel État est surligné ?":"¿Qué estado está resaltado?","Quelle province est surlignée ?":"¿Qué provincia está resaltada?","Voisin":"Vecina","Sans frontière":"Sin frontera","À revoir":"Para repasar","erreur":"error","erreurs":"errores","Nouveau record sur ce terrain.":"Nuevo récord en este terreno.","Sans faute. Difficile de faire mieux.":"Sin fallos. Difícil hacerlo mejor.","Solide. Le podium n'est pas loin.":"Sólido. El podio está cerca.","La moitié du chemin. Une autre manche ?":"La mitad del camino. ¿Otra ronda?","Le monde est vaste. On recommence ?":"El mundo es vasto. ¿Empezamos de nuevo?","Meilleur score":"Mejor puntuación","pays, tous continents":"países, todos los continentes","pays cartographiés":"países cartografiados","pays à frontières":"países con fronteras","États à frontières":"estados con fronteras","provinces cartographiées":"provincias cartografiadas","provinces à frontières":"provincias con fronteras","manche jouée":"ronda jugada","manches jouées":"rondas jugadas"}};
+let langue='fr';
+function L(x){
+  const d=TRAD[langue];
+  if(!d||x==null)return x;
+  const v=d[String(x)];
+  return v===undefined?x:v;
+}
+function traduireDOM(){
+  document.documentElement.lang=langue;
+  document.title=L(document.title);
+  const marche=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null);
+  const noeuds=[];
+  while(marche.nextNode())noeuds.push(marche.currentNode);
+  noeuds.forEach(function(n){
+    if(!n.nodeValue||!/[A-Za-z\u00C0-\u017F]{2}/.test(n.nodeValue))return;
+    if(n.parentNode&&/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName))return;
+    const t=L(n.nodeValue.trim());
+    if(t!==n.nodeValue.trim())n.nodeValue=n.nodeValue.replace(n.nodeValue.trim(),t);
+  });
+}
 
 /* ---------- Outils ---------- */
 const CLE='mappemonde.v1';
@@ -614,7 +651,7 @@ function ecran(id){
 
 function demarrer(m){
   mode=m;manche=fabrique(m);index=0;score=0;rates=[];
-  $('modeEnCours').textContent=LIBELLES[m];
+  $('modeEnCours').textContent=L(LIBELLES[m]);
   $('regle').innerHTML=Array.from({length:LONGUEUR},()=>'<span></span>').join('');
   ecran('jeu');
   poser();
@@ -712,9 +749,9 @@ function poser(){
 
   $('drapeau').hidden=!q.drapeau;
   $('drapeau').textContent=q.drapeau||'';
-  $('consigne').textContent=q.consigne;
+  $('consigne').textContent=L(q.consigne);
   $('consigne').className='consigne'+(q.forme?' '+q.forme:'');
-  $('question').textContent=q.question;
+  $('question').textContent=L(q.question);
   $('question').hidden=!q.question;
   $('verdict').textContent='';
   $('btnSuivant').hidden=true;
@@ -724,7 +761,7 @@ function poser(){
   q.options.forEach(opt=>{
     const b=document.createElement('button');
     b.className='reponse';
-    b.textContent=opt;
+    b.textContent=L(opt);
     b.addEventListener('click',()=>repondre(b,opt,q));
     zone.appendChild(b);
   });
@@ -737,7 +774,7 @@ function repondre(bouton,choix,q){
     invite:q.drapeau?'<span class="drap">'+q.drapeau+'</span>':
            q.carte?'<span class="drap">'+drapeauDe(q.carte)+'</span>':
            q.etat?q.etat[0]:
-           q.esp?(CARTESESP[q.esp]?CARTESESP[q.esp][5]:q.question):q.question,
+           q.esp?(CARTESESP[q.esp]?CARTESESP[q.esp][5]:L(q.question)):L(q.question),
     bonne:q.bonne,
     choix:choix
   });
@@ -752,13 +789,15 @@ function repondre(bouton,choix,q){
   if(!juste)reveler(q,choix);
 
   $('verdict').innerHTML=juste
-    ? 'Exact.'
+    ? L('Exact.')
     : (q.revele&&(q.carte||q.etat)
-        ? 'C\'était <strong class="cbonne">'+q.bonne+'</strong>, tu as répondu <strong class="cerr">'+choix+'</strong>.'
+        ? L("C'était {0}, tu as répondu {1}.")
+            .replace('{0}','<strong class="cbonne">'+L(q.bonne)+'</strong>')
+            .replace('{1}','<strong class="cerr">'+L(choix)+'</strong>')
         : 'C\'était <strong>'+q.bonne+'</strong>.');
 
   $('btnSuivant').hidden=false;
-  $('btnSuivant').textContent=index===LONGUEUR-1?'Voir le résultat':'Suivant';
+  $('btnSuivant').textContent=L(index===LONGUEUR-1?'Voir le résultat':'Suivant');
 }
 
 function suivant(){
@@ -775,7 +814,7 @@ function terminer(){
   d.parties=(d.parties||0)+1;
   ecrire(d);
 
-  $('modeFini').textContent=LIBELLES[mode];
+  $('modeFini').textContent=L(LIBELLES[mode]);
   $('scoreFinal').textContent=score;
   let phrase;
   if(nouveau&&score>0)phrase='Nouveau record sur ce terrain.';
@@ -783,7 +822,7 @@ function terminer(){
   else if(score>=7)phrase='Solide. Le podium n\'est pas loin.';
   else if(score>=4)phrase='La moitié du chemin. Une autre manche ?';
   else phrase='Le monde est vaste. On recommence ?';
-  $('bilan').textContent=phrase+' Meilleur score : '+d.records[mode]+' / 10.';
+  $('bilan').textContent=L(phrase)+' '+L('Meilleur score')+' : '+d.records[mode]+' / 10.';
   afficherRates();
   rafraichirAccueil();
   ecran('fin');
@@ -792,17 +831,17 @@ function terminer(){
 function afficherRates(){
   const zone=$('revoir');
   if(!rates.length){zone.innerHTML='';return;}
-  zone.innerHTML='<h2>À revoir — '+rates.length+' erreur'+(rates.length>1?'s':'')+'</h2>'+
+  zone.innerHTML='<h2>'+L('À revoir')+' — '+rates.length+' '+L(rates.length>1?'erreurs':'erreur')+'</h2>'+
     rates.map(r=>
       '<div class="rate">'+
         '<span class="invite">'+r.invite+'</span>'+
-        '<span class="bonne">'+r.bonne+'<span class="tien">'+r.choix+'</span></span>'+
+        '<span class="bonne">'+L(r.bonne)+'<span class="tien">'+L(r.choix)+'</span></span>'+
       '</div>').join('');
 }
 
 function rafraichirAccueil(){
   const d=lire();
-  const aff=m=>d.records[m]!==undefined?'Record<br>'+d.records[m]+'/10':'Jamais joué';
+  const aff=m=>d.records[m]!==undefined?L('Record')+'<br>'+d.records[m]+'/10':L('Jamais joué');
   $('recCapitales').innerHTML=aff('capitales');
   $('recDrapeaux').innerHTML=aff('drapeaux');
   $('recCarte').innerHTML=aff('carte');
@@ -812,13 +851,13 @@ function rafraichirAccueil(){
   $('recFrontieresUsa').innerHTML=aff('frontieresusa');
   $('recCarteEsp').innerHTML=aff('carteesp');
   $('recFrontieresEsp').innerHTML=aff('frontieresesp');
-  $('nbPays').textContent=PAYS.length+' pays, tous continents';
-  document.querySelector('[data-mode="carte"] .detail').textContent=Object.keys(CARTES).length+' pays cartographi\u00e9s';
-  $('nbFrontieres').textContent=Object.keys(VOISINS).length+' pays \u00e0 fronti\u00e8res';
-  $('nbFrontieresUsa').textContent=Object.keys(VOISINSUS).length+' \u00c9tats \u00e0 fronti\u00e8res';
-  $('nbEsp').textContent=Object.keys(CARTESESP).length+' provinces cartographi\u00e9es';
-  $('nbFrontieresEsp').textContent=Object.keys(CARTESESP).filter(p=>CARTESESP[p][5]&&(VOISINSESP[p]||ETRANGERESP[p])).length+' provinces \u00e0 fronti\u00e8res';
-  $('totalParties').textContent=d.parties?d.parties+' manche'+(d.parties>1?'s':'')+' jouée'+(d.parties>1?'s':''):'';
+  $('nbPays').textContent=PAYS.length+' '+L('pays, tous continents');
+  document.querySelector('[data-mode="carte"] .detail').textContent=Object.keys(CARTES).length+' '+L('pays cartographi\u00e9s');
+  $('nbFrontieres').textContent=Object.keys(VOISINS).length+' '+L('pays \u00e0 fronti\u00e8res');
+  $('nbFrontieresUsa').textContent=Object.keys(VOISINSUS).length+' '+L('\u00c9tats \u00e0 fronti\u00e8res');
+  $('nbEsp').textContent=Object.keys(CARTESESP).filter(p=>CARTESESP[p][5]).length+' '+L('provinces cartographi\u00e9es');
+  $('nbFrontieresEsp').textContent=Object.keys(CARTESESP).filter(p=>CARTESESP[p][5]&&(VOISINSESP[p]||ETRANGERESP[p])).length+' '+L('provinces \u00e0 fronti\u00e8res');
+  $('totalParties').textContent=d.parties?d.parties+' '+L(d.parties>1?'manches jouées':'manche jouée'):'';
 }
 
 /* ---------- Taille du texte ---------- */
@@ -831,6 +870,28 @@ function appliquerTaille(t){
 document.querySelectorAll('#taille button').forEach(b=>
   b.addEventListener('click',()=>appliquerTaille(b.dataset.taille)));
 appliquerTaille(lire().taille||'normal');
+
+/* ---------- Langue ---------- */
+function detecterLangue(){
+  const d=lire();
+  if(d.langue&&LANGUES_UI.indexOf(d.langue)!==-1)return d.langue;
+  const proposees=navigator.languages||[navigator.language||'fr'];
+  for(let i=0;i<proposees.length;i++){
+    const c=String(proposees[i]).slice(0,2).toLowerCase();
+    if(LANGUES_UI.indexOf(c)!==-1)return c;
+  }
+  return 'fr';
+}
+langue=detecterLangue();
+document.querySelectorAll('#langues button').forEach(b=>{
+  b.setAttribute('aria-pressed',String(b.dataset.langue===langue));
+  b.addEventListener('click',()=>{
+    if(b.dataset.langue===langue)return;
+    const d=lire(); d.langue=b.dataset.langue; ecrire(d);
+    location.reload();
+  });
+});
+if(langue!=='fr')traduireDOM();
 
 /* ---------- Branchements ---------- */
 document.querySelectorAll('.plaque').forEach(b=>

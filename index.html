@@ -197,6 +197,7 @@ h1{
 .taille button:nth-child(2){font-size:1rem}
 .taille button:nth-child(3){font-size:1.25rem}
 .taille button:nth-child(4){font-size:1.5rem}
+#longueur button,#taille button{font-size:1rem}
 .taille button[aria-pressed="true"]{background:var(--parchemin);color:var(--abysse);border-color:var(--parchemin);font-weight:700}
 
 .ecran{display:none}
@@ -217,6 +218,24 @@ h1{
     <p class="eyebrow">Quiz de géographie</p>
     <h1>Mapamundi</h1>
     <p class="sous-titre">Dix questions par manche. Choisis ton terrain.</p>
+
+    <button class="plaque" data-mode="mixte">
+      <span class="glyphe">✦</span>
+      <span class="texte">
+        <span class="nom">Manche mixte</span>
+        <span class="detail">Les neuf modes mélangés</span>
+      </span>
+      <span class="record" id="recMixte"></span>
+    </button>
+
+    <button class="plaque" data-mode="erreurs" id="plaqueErreurs">
+      <span class="glyphe">↺</span>
+      <span class="texte">
+        <span class="nom">Mes erreurs</span>
+        <span class="detail" id="nbErreurs"></span>
+      </span>
+      <span class="record" id="recErreurs"></span>
+    </button>
 
     <button class="plaque" data-mode="capitales">
       <span class="glyphe">◉</span>
@@ -299,12 +318,21 @@ h1{
       <span class="record" id="recFrontieresEsp"></span>
     </button>
 
+    <div class="taille" id="longueur">
+      <span class="titre">Questions par manche</span>
+      <button data-longueur="10">10</button>
+      <button data-longueur="20">20</button>
+      <button data-longueur="30">30</button>
+    </div>
+
     <div class="taille" id="taille">
       <span class="titre">Taille du texte</span>
       <button data-taille="normal" aria-pressed="false">Aa</button>
       <button data-taille="grand" aria-pressed="false">Aa</button>
       <button data-taille="tres-grand" aria-pressed="false">Aa</button>
     </div>
+
+    <button class="secondaire" id="btnReset">Remettre les compteurs à zéro</button>
 
     <p class="pied">
       Fonctionne hors ligne · Aucune donnée envoyée<br>
@@ -332,7 +360,7 @@ h1{
   <!-- FIN -->
   <section class="ecran" id="fin">
     <p class="eyebrow" id="modeFini"></p>
-    <p class="score"><span id="scoreFinal">0</span><small> / 10</small></p>
+    <p class="score"><span id="scoreFinal">0</span><small id="surCombien"> / 10</small></p>
     <p class="bilan" id="bilan"></p>
     <div class="revoir" id="revoir"></div>
     <button class="suivant" id="btnRejouer">Rejouer</button>
@@ -454,7 +482,7 @@ const VOISINSESP={"Navarra":["Araba","Gipuzkoa","Huesca","La Rioja","Zaragoza"],
 
 /* ---------- langues ---------- */
 const LANGUES_UI=['fr','es'];
-const TRAD={es:{"Albanie":"Albania","Allemagne":"Alemania","Andorre":"Andorra","Autriche":"Austria","Biélorussie":"Bielorrusia","Belgique":"Bélgica","Bosnie-Herzégovine":"Bosnia y Herzegovina","Bulgarie":"Bulgaria","Chypre":"Chipre","Croatie":"Croacia","Danemark":"Dinamarca","Espagne":"España","Estonie":"Estonia","Finlande":"Finlandia","France":"Francia","Grèce":"Grecia","Hongrie":"Hungría","Irlande":"Irlanda","Islande":"Islandia","Italie":"Italia","Lettonie":"Letonia","Lituanie":"Lituania","Luxembourg":"Luxemburgo","Macédoine du Nord":"Macedonia del Norte","Malte":"Malta","Moldavie":"Moldavia","Monténégro":"Montenegro","Norvège":"Noruega","Pays-Bas":"Países Bajos","Pologne":"Polonia","Tchéquie":"Chequia","Roumanie":"Rumanía","Royaume-Uni":"Reino Unido","Russie":"Rusia","Saint-Marin":"San Marino","Serbie":"Serbia","Slovaquie":"Eslovaquia","Slovénie":"Eslovenia","Suède":"Suecia","Suisse":"Suiza","Ukraine":"Ucrania","Turquie":"Turquía","Afghanistan":"Afganistán","Arabie saoudite":"Arabia Saudí","Arménie":"Armenia","Azerbaïdjan":"Azerbaiyán","Bahreïn":"Baréin","Bangladesh":"Bangladés","Bhoutan":"Bután","Birmanie":"Birmania","Brunei":"Brunéi","Cambodge":"Camboya","Chine":"China","Corée du Nord":"Corea del Norte","Corée du Sud":"Corea del Sur","Émirats arabes unis":"Emiratos Árabes Unidos","Géorgie":"Georgia","Inde":"India","Indonésie":"Indonesia","Iran":"Irán","Japon":"Japón","Jordanie":"Jordania","Kazakhstan":"Kazajistán","Kirghizistan":"Kirguistán","Koweït":"Kuwait","Liban":"Líbano","Malaisie":"Malasia","Maldives":"Maldivas","Mongolie":"Mongolia","Népal":"Nepal","Oman":"Omán","Ouzbékistan":"Uzbekistán","Pakistan":"Pakistán","Philippines":"Filipinas","Qatar":"Catar","Singapour":"Singapur","Syrie":"Siria","Tadjikistan":"Tayikistán","Thaïlande":"Tailandia","Timor oriental":"Timor Oriental","Turkménistan":"Turkmenistán","Viêt Nam":"Vietnam","Yémen":"Yemen","Israël":"Israel","Palestine":"Palestina","Taïwan":"Taiwán","Afrique du Sud":"Sudáfrica","Algérie":"Argelia","Bénin":"Benín","Cameroun":"Camerún","Cap-Vert":"Cabo Verde","République centrafricaine":"República Centroafricana","Comores":"Comoras","République démocratique du Congo":"República Democrática del Congo","Côte d'Ivoire":"Costa de Marfil","Égypte":"Egipto","Érythrée":"Eritrea","Eswatini":"Esuatini","Éthiopie":"Etiopía","Gabon":"Gabón","Gambie":"Gambia","Guinée":"Guinea","Guinée-Bissau":"Guinea-Bisáu","Guinée équatoriale":"Guinea Ecuatorial","Kenya":"Kenia","Libye":"Libia","Malawi":"Malaui","Maroc":"Marruecos","Maurice":"Mauricio","Mauritanie":"Mauritania","Namibie":"Namibia","Ouganda":"Uganda","Rwanda":"Ruanda","Sao Tomé-et-Principe":"Santo Tomé y Príncipe","Sénégal":"Senegal","Somalie":"Somalia","Soudan":"Sudán","Soudan du Sud":"Sudán del Sur","Tanzanie":"Tanzania","Tchad":"Chad","Tunisie":"Túnez","Zambie":"Zambia","Zimbabwe":"Zimbabue","Djibouti":"Yibuti","Antigua-et-Barbuda":"Antigua y Barbuda","Argentine":"Argentina","Barbade":"Barbados","Belize":"Belice","Bolivie":"Bolivia","Brésil":"Brasil","Canada":"Canadá","Chili":"Chile","Colombie":"Colombia","Dominique":"Dominica","Salvador":"El Salvador","Équateur":"Ecuador","États-Unis":"Estados Unidos","Grenade":"Granada","Haïti":"Haití","Jamaïque":"Jamaica","Mexique":"México","Panama":"Panamá","Pérou":"Perú","République dominicaine":"República Dominicana","Saint-Christophe-et-Niévès":"San Cristóbal y Nieves","Sainte-Lucie":"Santa Lucía","Saint-Vincent-et-les-Grenadines":"San Vicente y las Granadinas","Suriname":"Surinam","Trinité-et-Tobago":"Trinidad y Tobago","Australie":"Australia","Fidji":"Fiyi","Îles Marshall":"Islas Marshall","Micronésie":"Micronesia","Nouvelle-Zélande":"Nueva Zelanda","Papouasie-Nouvelle-Guinée":"Papúa Nueva Guinea","Îles Salomon":"Islas Salomón","Monaco":"Mónaco","Botswana":"Botsuana","Mali":"Malí","Niger":"Níger","Sierra Leone":"Sierra Leona","Vienne":"Viena","Bruxelles":"Bruselas","Athènes":"Atenas","Moscou":"Moscú","Varsovie":"Varsovia","Lisbonne":"Lisboa","Belgrade":"Belgrado","Stockholm":"Estocolmo","Berne":"Berna","Andorre-la-Vieille":"Andorra la Vieja","Reykjavik":"Reikiavik","Rome":"Roma","Chisinau":"Chisináu","Nicosie":"Nicosia","La Valette":"La Valeta","Kaboul":"Kabul","Riyad":"Riad","Erevan":"Ereván","Bakou":"Bakú","Dacca":"Daca","Thimphou":"Timbu","Pékin":"Pekín","Pyongyang":"Pionyang","Séoul":"Seúl","Abou Dabi":"Abu Dabi","Tbilissi":"Tiflis","New Delhi":"Nueva Delhi","Téhéran":"Teherán","Tokyo":"Tokio","Amman":"Amán","Astana":"Astaná","Bichkek":"Biskek","Beyrouth":"Beirut","Oulan-Bator":"Ulán Bator","Katmandou":"Katmandú","Tachkent":"Taskent","Manille":"Manila","Damas":"Damasco","Douchanbé":"Dusambé","Hanoï":"Hanói","Sanaa":"Saná","Jérusalem":"Jerusalén","Taipei":"Taipéi","Le Caire":"El Cairo","Alger":"Argel","Yaoundé":"Yaundé","Yamoussoukro":"Yamusukro","Addis-Abeba":"Adís Abeba","Nouakchott":"Nuakchot","Ouagadougou":"Uagadugú","N'Djaména":"Yamena","Port-Louis":"Port Louis","São Tomé":"Santo Tomé","Khartoum":"Jartum","Djouba":"Yuba","Tripoli":"Trípoli","La Havane":"La Habana","Saint-Georges":"Saint George","Port-au-Prince":"Puerto Príncipe","Mexico":"Ciudad de México","Asuncion":"Asunción","Saint-Domingue":"Santo Domingo","Port-d'Espagne":"Puerto España","Bogota":"Bogotá","Port Moresby":"Puerto Moresby","Nuku'alofa":"Nukualofa","Port-Vila":"Port Vila","Berlin":"Berlín","Sofia":"Sofía","Tallinn":"Tallin","Paris":"París","Dublin":"Dublín","Vilnius":"Vilna","Skopje":"Skopie","Amsterdam":"Ámsterdam","Prague":"Praga","Ljubljana":"Liubliana","Jakarta":"Yakarta","Vientiane":"Vientián","Achgabat":"Asjabad","Ramallah":"Ramala","Porto-Novo":"Porto Novo","Bissau":"Bisáu","Tunis":"Túnez","Californie":"California","Caroline du Nord":"Carolina del Norte","Caroline du Sud":"Carolina del Sur","Dakota du Nord":"Dakota del Norte","Dakota du Sud":"Dakota del Sur","Floride":"Florida","Hawaï":"Hawái","Louisiane":"Luisiana","Nouveau-Mexique":"Nuevo México","Pennsylvanie":"Pensilvania","Virginie":"Virginia","Virginie-Occidentale":"Virginia Occidental","New York":"Nueva York","New Jersey":"Nueva Jersey","New Hampshire":"Nuevo Hampshire","Bâton-Rouge":"Baton Rouge","Quiz de géographie":"Cuestionario de geografía","Dix questions par manche. Choisis ton terrain.":"Diez preguntas por ronda. Elige tu terreno.","Capitales du monde":"Capitales del mundo","Drapeaux":"Banderas","Reconnaître le pays":"Reconocer el país","Carte du monde":"Mapa del mundo","Reconnaître le pays surligné":"Reconocer el país resaltado","Frontières":"Fronteras","États américains":"Estados de EE. UU.","Les 50 États et leurs capitales":"Los 50 estados y sus capitales","Carte des États-Unis":"Mapa de Estados Unidos","Reconnaître l'État surligné":"Reconocer el estado resaltado","Frontières des États-Unis":"Fronteras de Estados Unidos","Carte des provinces espagnoles":"Mapa de las provincias españolas","Frontières des provinces espagnoles":"Fronteras de las provincias españolas","Taille du texte":"Tamaño del texto","Fonctionne hors ligne · Aucune donnée envoyée":"Funciona sin conexión · No se envía ningún dato","Scores conservés sur cet appareil":"Puntuaciones guardadas en este dispositivo","Quitter":"Salir","Suivant":"Siguiente","Voir le résultat":"Ver el resultado","Rejouer":"Jugar otra vez","Changer de terrain":"Cambiar de terreno","Jamais joué":"Nunca jugado","Record":"Récord","Exact":"Exacto","Quelle est sa capitale ?":"¿Cuál es su capital?","De quel pays est-elle la capitale ?":"¿De qué país es la capital?","De quel État est-elle la capitale ?":"¿De qué estado es la capital?","Quel est ce pays ?":"¿Qué país es este?","Quel pays est surligné ?":"¿Qué país está resaltado?","Quel État est surligné ?":"¿Qué estado está resaltado?","Quelle province est surlignée ?":"¿Qué provincia está resaltada?","Voisin":"Vecina","Sans frontière":"Sin frontera","À revoir":"Para repasar","erreur":"error","erreurs":"errores","Nouveau record sur ce terrain.":"Nuevo récord en este terreno.","Sans faute. Difficile de faire mieux.":"Sin fallos. Difícil hacerlo mejor.","Solide. Le podium n'est pas loin.":"Sólido. El podio está cerca.","La moitié du chemin. Une autre manche ?":"La mitad del camino. ¿Otra ronda?","Le monde est vaste. On recommence ?":"El mundo es vasto. ¿Empezamos de nuevo?","Meilleur score":"Mejor puntuación","pays, tous continents":"países, todos los continentes","pays cartographiés":"países cartografiados","pays à frontières":"países con fronteras","États à frontières":"estados con fronteras","provinces cartographiées":"provincias cartografiadas","provinces à frontières":"provincias con fronteras","manche jouée":"ronda jugada","manches jouées":"rondas jugadas","Frontières du monde":"Fronteras del mundo","Carte États-Unis":"Mapa EE. UU.","Frontières États-Unis":"Fronteras EE. UU.","Carte Espagne":"Mapa España","Frontières Espagne":"Fronteras España"}};
+const TRAD={es:{"Albanie":"Albania","Allemagne":"Alemania","Andorre":"Andorra","Autriche":"Austria","Biélorussie":"Bielorrusia","Belgique":"Bélgica","Bosnie-Herzégovine":"Bosnia y Herzegovina","Bulgarie":"Bulgaria","Chypre":"Chipre","Croatie":"Croacia","Danemark":"Dinamarca","Espagne":"España","Estonie":"Estonia","Finlande":"Finlandia","France":"Francia","Grèce":"Grecia","Hongrie":"Hungría","Irlande":"Irlanda","Islande":"Islandia","Italie":"Italia","Lettonie":"Letonia","Lituanie":"Lituania","Luxembourg":"Luxemburgo","Macédoine du Nord":"Macedonia del Norte","Malte":"Malta","Moldavie":"Moldavia","Monténégro":"Montenegro","Norvège":"Noruega","Pays-Bas":"Países Bajos","Pologne":"Polonia","Tchéquie":"Chequia","Roumanie":"Rumanía","Royaume-Uni":"Reino Unido","Russie":"Rusia","Saint-Marin":"San Marino","Serbie":"Serbia","Slovaquie":"Eslovaquia","Slovénie":"Eslovenia","Suède":"Suecia","Suisse":"Suiza","Ukraine":"Ucrania","Turquie":"Turquía","Afghanistan":"Afganistán","Arabie saoudite":"Arabia Saudí","Arménie":"Armenia","Azerbaïdjan":"Azerbaiyán","Bahreïn":"Baréin","Bangladesh":"Bangladés","Bhoutan":"Bután","Birmanie":"Birmania","Brunei":"Brunéi","Cambodge":"Camboya","Chine":"China","Corée du Nord":"Corea del Norte","Corée du Sud":"Corea del Sur","Émirats arabes unis":"Emiratos Árabes Unidos","Géorgie":"Georgia","Inde":"India","Indonésie":"Indonesia","Iran":"Irán","Japon":"Japón","Jordanie":"Jordania","Kazakhstan":"Kazajistán","Kirghizistan":"Kirguistán","Koweït":"Kuwait","Liban":"Líbano","Malaisie":"Malasia","Maldives":"Maldivas","Mongolie":"Mongolia","Népal":"Nepal","Oman":"Omán","Ouzbékistan":"Uzbekistán","Pakistan":"Pakistán","Philippines":"Filipinas","Qatar":"Catar","Singapour":"Singapur","Syrie":"Siria","Tadjikistan":"Tayikistán","Thaïlande":"Tailandia","Timor oriental":"Timor Oriental","Turkménistan":"Turkmenistán","Viêt Nam":"Vietnam","Yémen":"Yemen","Israël":"Israel","Palestine":"Palestina","Taïwan":"Taiwán","Afrique du Sud":"Sudáfrica","Algérie":"Argelia","Bénin":"Benín","Cameroun":"Camerún","Cap-Vert":"Cabo Verde","République centrafricaine":"República Centroafricana","Comores":"Comoras","République démocratique du Congo":"República Democrática del Congo","Côte d'Ivoire":"Costa de Marfil","Égypte":"Egipto","Érythrée":"Eritrea","Eswatini":"Esuatini","Éthiopie":"Etiopía","Gabon":"Gabón","Gambie":"Gambia","Guinée":"Guinea","Guinée-Bissau":"Guinea-Bisáu","Guinée équatoriale":"Guinea Ecuatorial","Kenya":"Kenia","Libye":"Libia","Malawi":"Malaui","Maroc":"Marruecos","Maurice":"Mauricio","Mauritanie":"Mauritania","Namibie":"Namibia","Ouganda":"Uganda","Rwanda":"Ruanda","Sao Tomé-et-Principe":"Santo Tomé y Príncipe","Sénégal":"Senegal","Somalie":"Somalia","Soudan":"Sudán","Soudan du Sud":"Sudán del Sur","Tanzanie":"Tanzania","Tchad":"Chad","Tunisie":"Túnez","Zambie":"Zambia","Zimbabwe":"Zimbabue","Djibouti":"Yibuti","Antigua-et-Barbuda":"Antigua y Barbuda","Argentine":"Argentina","Barbade":"Barbados","Belize":"Belice","Bolivie":"Bolivia","Brésil":"Brasil","Canada":"Canadá","Chili":"Chile","Colombie":"Colombia","Dominique":"Dominica","Salvador":"El Salvador","Équateur":"Ecuador","États-Unis":"Estados Unidos","Grenade":"Granada","Haïti":"Haití","Jamaïque":"Jamaica","Mexique":"México","Panama":"Panamá","Pérou":"Perú","République dominicaine":"República Dominicana","Saint-Christophe-et-Niévès":"San Cristóbal y Nieves","Sainte-Lucie":"Santa Lucía","Saint-Vincent-et-les-Grenadines":"San Vicente y las Granadinas","Suriname":"Surinam","Trinité-et-Tobago":"Trinidad y Tobago","Australie":"Australia","Fidji":"Fiyi","Îles Marshall":"Islas Marshall","Micronésie":"Micronesia","Nouvelle-Zélande":"Nueva Zelanda","Papouasie-Nouvelle-Guinée":"Papúa Nueva Guinea","Îles Salomon":"Islas Salomón","Monaco":"Mónaco","Botswana":"Botsuana","Mali":"Malí","Niger":"Níger","Sierra Leone":"Sierra Leona","Vienne":"Viena","Bruxelles":"Bruselas","Athènes":"Atenas","Moscou":"Moscú","Varsovie":"Varsovia","Lisbonne":"Lisboa","Belgrade":"Belgrado","Stockholm":"Estocolmo","Berne":"Berna","Andorre-la-Vieille":"Andorra la Vieja","Reykjavik":"Reikiavik","Rome":"Roma","Chisinau":"Chisináu","Nicosie":"Nicosia","La Valette":"La Valeta","Kaboul":"Kabul","Riyad":"Riad","Erevan":"Ereván","Bakou":"Bakú","Dacca":"Daca","Thimphou":"Timbu","Pékin":"Pekín","Pyongyang":"Pionyang","Séoul":"Seúl","Abou Dabi":"Abu Dabi","Tbilissi":"Tiflis","New Delhi":"Nueva Delhi","Téhéran":"Teherán","Tokyo":"Tokio","Amman":"Amán","Astana":"Astaná","Bichkek":"Biskek","Beyrouth":"Beirut","Oulan-Bator":"Ulán Bator","Katmandou":"Katmandú","Tachkent":"Taskent","Manille":"Manila","Damas":"Damasco","Douchanbé":"Dusambé","Hanoï":"Hanói","Sanaa":"Saná","Jérusalem":"Jerusalén","Taipei":"Taipéi","Le Caire":"El Cairo","Alger":"Argel","Yaoundé":"Yaundé","Yamoussoukro":"Yamusukro","Addis-Abeba":"Adís Abeba","Nouakchott":"Nuakchot","Ouagadougou":"Uagadugú","N'Djaména":"Yamena","Port-Louis":"Port Louis","São Tomé":"Santo Tomé","Khartoum":"Jartum","Djouba":"Yuba","Tripoli":"Trípoli","La Havane":"La Habana","Saint-Georges":"Saint George","Port-au-Prince":"Puerto Príncipe","Mexico":"Ciudad de México","Asuncion":"Asunción","Saint-Domingue":"Santo Domingo","Port-d'Espagne":"Puerto España","Bogota":"Bogotá","Port Moresby":"Puerto Moresby","Nuku'alofa":"Nukualofa","Port-Vila":"Port Vila","Berlin":"Berlín","Sofia":"Sofía","Tallinn":"Tallin","Paris":"París","Dublin":"Dublín","Vilnius":"Vilna","Skopje":"Skopie","Amsterdam":"Ámsterdam","Prague":"Praga","Ljubljana":"Liubliana","Jakarta":"Yakarta","Vientiane":"Vientián","Achgabat":"Asjabad","Ramallah":"Ramala","Porto-Novo":"Porto Novo","Bissau":"Bisáu","Tunis":"Túnez","Californie":"California","Caroline du Nord":"Carolina del Norte","Caroline du Sud":"Carolina del Sur","Dakota du Nord":"Dakota del Norte","Dakota du Sud":"Dakota del Sur","Floride":"Florida","Hawaï":"Hawái","Louisiane":"Luisiana","Nouveau-Mexique":"Nuevo México","Pennsylvanie":"Pensilvania","Virginie":"Virginia","Virginie-Occidentale":"Virginia Occidental","New York":"Nueva York","New Jersey":"Nueva Jersey","New Hampshire":"Nuevo Hampshire","Bâton-Rouge":"Baton Rouge","Quiz de géographie":"Cuestionario de geografía","Dix questions par manche. Choisis ton terrain.":"Diez preguntas por ronda. Elige tu terreno.","Capitales du monde":"Capitales del mundo","Drapeaux":"Banderas","Reconnaître le pays":"Reconocer el país","Carte du monde":"Mapa del mundo","Reconnaître le pays surligné":"Reconocer el país resaltado","Frontières":"Fronteras","États américains":"Estados de EE. UU.","Les 50 États et leurs capitales":"Los 50 estados y sus capitales","Carte des États-Unis":"Mapa de Estados Unidos","Reconnaître l'État surligné":"Reconocer el estado resaltado","Frontières des États-Unis":"Fronteras de Estados Unidos","Carte des provinces espagnoles":"Mapa de las provincias españolas","Frontières des provinces espagnoles":"Fronteras de las provincias españolas","Taille du texte":"Tamaño del texto","Fonctionne hors ligne · Aucune donnée envoyée":"Funciona sin conexión · No se envía ningún dato","Scores conservés sur cet appareil":"Puntuaciones guardadas en este dispositivo","Quitter":"Salir","Suivant":"Siguiente","Voir le résultat":"Ver el resultado","Rejouer":"Jugar otra vez","Changer de terrain":"Cambiar de terreno","Jamais joué":"Nunca jugado","Record":"Récord","Exact":"Exacto","Quelle est sa capitale ?":"¿Cuál es su capital?","De quel pays est-elle la capitale ?":"¿De qué país es la capital?","De quel État est-elle la capitale ?":"¿De qué estado es la capital?","Quel est ce pays ?":"¿Qué país es este?","Quel pays est surligné ?":"¿Qué país está resaltado?","Quel État est surligné ?":"¿Qué estado está resaltado?","Quelle province est surlignée ?":"¿Qué provincia está resaltada?","Voisin":"Vecina","Sans frontière":"Sin frontera","À revoir":"Para repasar","erreur":"error","erreurs":"errores","Nouveau record sur ce terrain.":"Nuevo récord en este terreno.","Sans faute. Difficile de faire mieux.":"Sin fallos. Difícil hacerlo mejor.","Solide. Le podium n'est pas loin.":"Sólido. El podio está cerca.","La moitié du chemin. Une autre manche ?":"La mitad del camino. ¿Otra ronda?","Le monde est vaste. On recommence ?":"El mundo es vasto. ¿Empezamos de nuevo?","Meilleur score":"Mejor puntuación","pays, tous continents":"países, todos los continentes","pays cartographiés":"países cartografiados","pays à frontières":"países con fronteras","États à frontières":"estados con fronteras","provinces cartographiées":"provincias cartografiadas","provinces à frontières":"provincias con fronteras","manche jouée":"ronda jugada","manches jouées":"rondas jugadas","Frontières du monde":"Fronteras del mundo","Carte États-Unis":"Mapa EE. UU.","Frontières États-Unis":"Fronteras EE. UU.","Carte Espagne":"Mapa España","Frontières Espagne":"Fronteras España","Manche mixte":"Ronda mixta","Les neuf modes mélangés":"Los nueve modos mezclados","Mes erreurs":"Mis errores","question en réserve":"pregunta pendiente","questions en réserve":"preguntas pendientes","Aucune erreur en réserve":"Ningún error pendiente","Questions par manche":"Preguntas por ronda","Remettre les compteurs à zéro":"Poner los contadores a cero","Effacer tous les records et la liste des erreurs ?":"¿Borrar todos los récords y la lista de errores?","Aucune question disponible.":"No hay preguntas disponibles.","en réserve":"pendientes"}};
 let langue='fr';
 function L(x){
   const d=TRAD[langue];
@@ -478,7 +506,21 @@ function traduireDOM(){
 
 /* ---------- Outils ---------- */
 const CLE='mapamundi.v1';
-const LONGUEUR=10;
+let LONGUEUR=10;
+const MODES_SIMPLES=['capitales','drapeaux','carte','frontieres','usa','carteusa',
+  'frontieresusa','carteesp','frontieresesp'];
+const LONGUEURS=[10,20,30];
+
+function tirer(mode,liste,cleF,restreint,f){
+  let l=liste;
+  if(restreint&&restreint.length){
+    const g=new Set(restreint);
+    l=liste.filter(x=>g.has(cleF(x)));
+  }
+  return melange(l).slice(0,LONGUEUR).map(function(x){
+    const q=f(x); q.mode=mode; q.suj=cleF(x); return q;
+  });
+}
 const $=id=>document.getElementById(id);
 const drapeauDe=code=>String.fromCodePoint(...[...code].map(c=>0x1F1E6+c.charCodeAt(0)-65));
 const melange=t=>{const a=[...t];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -491,18 +533,31 @@ function ecrire(d){
   try{localStorage.setItem(CLE,JSON.stringify(d));}catch(e){/* stockage indisponible */}
 }
 
-const LIBELLES={capitales:'Capitales du monde',drapeaux:'Drapeaux',carte:'Carte du monde',usa:'États américains',carteusa:'Carte des États-Unis',frontieres:'Frontières',frontieresusa:'Frontières des États-Unis',carteesp:'Carte des provinces espagnoles',frontieresesp:'Frontières des provinces espagnoles'};
+const LIBELLES={capitales:'Capitales du monde',drapeaux:'Drapeaux',carte:'Carte du monde',usa:'États américains',carteusa:'Carte des États-Unis',frontieres:'Frontières',frontieresusa:'Frontières des États-Unis',mixte:'Manche mixte',erreurs:'Mes erreurs',carteesp:'Carte des provinces espagnoles',frontieresesp:'Frontières des provinces espagnoles'};
 
 /* ---------- Fabrication des questions ---------- */
-const LIBELLES_COURT={capitales:'Capitales',drapeaux:'Drapeaux',carte:'Carte du monde',
+const LIBELLES_COURT={mixte:'Manche mixte',erreurs:'Mes erreurs',capitales:'Capitales',drapeaux:'Drapeaux',carte:'Carte du monde',
   frontieres:'Frontières du monde',usa:'États américains',carteusa:'Carte États-Unis',
   frontieresusa:'Frontières États-Unis',carteesp:'Carte Espagne',frontieresesp:'Frontières Espagne'};
 
-function fabrique(mode){
+function fabrique(mode,restreint){
   const ident4=function(l){const o={};l.forEach(function(n){o[n]=n;});return o;};
   const PROV=Object.keys(CARTESESP).filter(p=>CARTESESP[p][5]);
+  if(mode==='mixte'||mode==='erreurs'){
+    let vivier=[];
+    if(mode==='erreurs'){
+      const parMode={};
+      (lire().erreurs||[]).forEach(function(e){
+        if(MODES_SIMPLES.indexOf(e.m)!==-1)(parMode[e.m]=parMode[e.m]||[]).push(e.c);
+      });
+      Object.keys(parMode).forEach(function(m){vivier=vivier.concat(fabrique(m,parMode[m]));});
+    }else{
+      MODES_SIMPLES.forEach(function(m){vivier=vivier.concat(fabrique(m));});
+    }
+    return melange(vivier).slice(0,LONGUEUR);
+  }
   if(mode==='carteesp'){
-    return melange(PROV).slice(0,LONGUEUR).map(function(prov){
+    return tirer(mode,PROV,p=>p,restreint,function(prov){
       const com=CARTESESP[prov][5];
       let vivier=melange(PROV.filter(p=>p!==prov&&CARTESESP[p][5]===com));
       vivier=vivier.concat(melange(PROV.filter(p=>p!==prov&&CARTESESP[p][5]!==com)));
@@ -513,7 +568,7 @@ function fabrique(mode){
   }
   if(mode==='frontieresesp'){
     const sujets=PROV.filter(p=>VOISINSESP[p]||ETRANGERESP[p]);
-    return melange(sujets).slice(0,LONGUEUR).map(function(prov){
+    return tirer(mode,sujets,p=>p,restreint,function(prov){
       const dedans=VOISINSESP[prov]||[], dehors=ETRANGERESP[prov]||[];
       const vs=dedans.concat(dehors);
       const exclus=new Set([prov].concat(vs));
@@ -540,7 +595,7 @@ function fabrique(mode){
     });
   }
   if(mode==='usa'){
-    return melange(ETATS).slice(0,LONGUEUR).map(etat=>{
+    return tirer(mode,ETATS,e=>e[0],restreint,etat=>{
       const inverse=Math.random()<.4;
       const leurres=melange(ETATS.filter(e=>e[0]!==etat[0])).slice(0,3);
       return inverse
@@ -552,7 +607,7 @@ function fabrique(mode){
   }
   if(mode==='frontieresusa'){
     const sujets=ETATS.filter(e=>VOISINSUS[e[0]]);
-    return melange(sujets).slice(0,LONGUEUR).map(etat=>{
+    return tirer(mode,sujets,e=>e[0],restreint,etat=>{
       const vs=VOISINSUS[etat[0]];
       const exclus=new Set([etat[0]].concat(vs));
       const d2=new Set();
@@ -578,7 +633,7 @@ function fabrique(mode){
   if(mode==='frontieres'){
     const nom=c=>{const p=PAYS.find(x=>x[0]===c);return p?p[1]:c;};
     const sujets=PAYS.filter(p=>VOISINS[p[0]]);
-    return melange(sujets).slice(0,LONGUEUR).map(pays=>{
+    return tirer(mode,sujets,p=>p[0],restreint,pays=>{
       const vs=VOISINS[pays[0]];
       const exclus=new Set([pays[0]].concat(vs));
       const d2=new Set();
@@ -606,7 +661,7 @@ function fabrique(mode){
   }
   if(mode==='carteusa'){
     const dispo=ETATS.filter(e=>CARTESUS[e[0]]);
-    return melange(dispo).slice(0,LONGUEUR).map(etat=>{
+    return tirer(mode,dispo,e=>e[0],restreint,etat=>{
       const leurres=melange(ETATS.filter(e=>e[0]!==etat[0])).slice(0,3);
       return {atlas:'usa',cle:etat[0],etat:CARTESUS[etat[0]],consigne:'Quel État est surligné ?',question:'',
               bonne:etat[0],options:melange([etat[0],...leurres.map(e=>e[0])])};
@@ -614,7 +669,7 @@ function fabrique(mode){
   }
   if(mode==='carte'){
     const dispo=PAYS.filter(p=>CARTES[p[0]]);
-    return melange(dispo).slice(0,LONGUEUR).map(pays=>{
+    return tirer(mode,dispo,p=>p[0],restreint,pays=>{
       const memeZone=PAYS.filter(p=>p[3]===pays[3]&&p[0]!==pays[0]);
       const vivier=memeZone.length>=3?memeZone:PAYS.filter(p=>p[0]!==pays[0]);
       const leurres=melange(vivier).slice(0,3);
@@ -622,7 +677,7 @@ function fabrique(mode){
               bonne:pays[1],options:melange([pays[1],...leurres.map(p=>p[1])])};
     });
   }
-  return melange(PAYS).slice(0,LONGUEUR).map(pays=>{
+  return tirer(mode,PAYS,p=>p[0],restreint,pays=>{
     const memeZone=PAYS.filter(p=>p[3]===pays[3]&&p[0]!==pays[0]);
     const vivier=memeZone.length>=3?memeZone:PAYS.filter(p=>p[0]!==pays[0]);
     const leurres=melange(vivier).slice(0,3);
@@ -647,7 +702,7 @@ function fabrique(mode){
 }
 
 /* ---------- Déroulement ---------- */
-let manche=[],index=0,score=0,mode=null,rates=[];
+let manche=[],index=0,score=0,mode=null,rates=[],nbQ=10;
 
 function ecran(id){
   document.querySelectorAll('.ecran').forEach(s=>s.classList.toggle('visible',s.id===id));
@@ -655,9 +710,11 @@ function ecran(id){
 }
 
 function demarrer(m){
-  mode=m;manche=fabrique(m);index=0;score=0;rates=[];
+  mode=m;manche=fabrique(m);
+  if(!manche.length){alert(L('Aucune question disponible.'));return;}
+  nbQ=manche.length;index=0;score=0;rates=[];
   $('modeEnCours').textContent=L(LIBELLES_COURT[m]||LIBELLES[m]);
-  $('regle').innerHTML=Array.from({length:LONGUEUR},()=>'<span></span>').join('');
+  $('regle').innerHTML=Array.from({length:nbQ},()=>'<span></span>').join('');
   ecran('jeu');
   poser();
 }
@@ -784,6 +841,15 @@ function repondre(bouton,choix,q){
     bonne:q.bonne,
     choix:choix
   });
+  if(q.mode&&q.suj!==undefined&&q.suj!==null){
+    const dd=lire(), e=dd.erreurs||[];
+    let i=-1;
+    for(let k=0;k<e.length;k++)if(e[k].m===q.mode&&e[k].c===q.suj){i=k;break;}
+    if(juste){if(i!==-1)e.splice(i,1);}
+    else if(i===-1){e.push({m:q.mode,c:q.suj});if(e.length>300)e.shift();}
+    dd.erreurs=e; ecrire(dd);
+  }
+
   $('regle').children[index].classList.add(juste?'juste':'faux');
 
   [...$('reponses').children].forEach(b=>{
@@ -803,32 +869,36 @@ function repondre(bouton,choix,q){
         : 'C\'était <strong>'+q.bonne+'</strong>.');
 
   $('btnSuivant').hidden=false;
-  $('btnSuivant').textContent=L(index===LONGUEUR-1?'Voir le résultat':'Suivant');
+  $('btnSuivant').textContent=L(index===nbQ-1?'Voir le résultat':'Suivant');
 }
 
 function suivant(){
   index++;
-  if(index<LONGUEUR){poser();return;}
+  if(index<nbQ){poser();return;}
   terminer();
 }
 
 function terminer(){
   const d=lire();
-  const ancien=d.records[mode]||0;
+  const chiffre=(mode!=='erreurs');
+  const rk=mode+'-'+nbQ;
+  const ancien=chiffre?(d.records[rk]||0):0;
   const nouveau=score>ancien;
-  d.records[mode]=Math.max(ancien,score);
+  if(chiffre)d.records[rk]=Math.max(ancien,score);
   d.parties=(d.parties||0)+1;
   ecrire(d);
 
   $('modeFini').textContent=L(LIBELLES[mode]);
   $('scoreFinal').textContent=score;
+  $('surCombien').textContent=' / '+nbQ;
   let phrase;
   if(nouveau&&score>0)phrase='Nouveau record sur ce terrain.';
-  else if(score===10)phrase='Sans faute. Difficile de faire mieux.';
-  else if(score>=7)phrase='Solide. Le podium n\'est pas loin.';
-  else if(score>=4)phrase='La moitié du chemin. Une autre manche ?';
+  else if(score===nbQ)phrase='Sans faute. Difficile de faire mieux.';
+  else if(score>=nbQ*0.7)phrase='Solide. Le podium n\'est pas loin.';
+  else if(score>=nbQ*0.4)phrase='La moitié du chemin. Une autre manche ?';
   else phrase='Le monde est vaste. On recommence ?';
-  $('bilan').textContent=L(phrase)+' '+L('Meilleur score')+' : '+d.records[mode]+' / 10.';
+  $('bilan').textContent=chiffre?(L(phrase)+' '+L('Meilleur score')+' : '+d.records[rk]+' / '+nbQ+'.')
+    :(L(phrase)+' '+(lire().erreurs||[]).length+' '+L('en réserve'));
   afficherRates();
   rafraichirAccueil();
   ecran('fin');
@@ -847,7 +917,8 @@ function afficherRates(){
 
 function rafraichirAccueil(){
   const d=lire();
-  const aff=m=>d.records[m]!==undefined?L('Record')+'<br>'+d.records[m]+'/10':L('Jamais joué');
+  const aff=m=>{const v=d.records[m+'-'+LONGUEUR];
+    return v!==undefined?L('Record')+'<br>'+v+'/'+LONGUEUR:L('Jamais joué');};
   $('recCapitales').innerHTML=aff('capitales');
   $('recDrapeaux').innerHTML=aff('drapeaux');
   $('recCarte').innerHTML=aff('carte');
@@ -855,6 +926,13 @@ function rafraichirAccueil(){
   $('recCarteUsa').innerHTML=aff('carteusa');
   $('recFrontieres').innerHTML=aff('frontieres');
   $('recFrontieresUsa').innerHTML=aff('frontieresusa');
+  $('recMixte').innerHTML=aff('mixte');
+  $('recErreurs').innerHTML='';
+  const ne=(d.erreurs||[]).length;
+  $('nbErreurs').textContent=ne?ne+' '+L(ne>1?'questions en réserve':'question en réserve')
+                              :L('Aucune erreur en réserve');
+  $('plaqueErreurs').disabled=!ne;
+  $('plaqueErreurs').style.opacity=ne?'1':'.45';
   $('recCarteEsp').innerHTML=aff('carteesp');
   $('recFrontieresEsp').innerHTML=aff('frontieresesp');
   $('nbPays').textContent=PAYS.length+' '+L('pays, tous continents');
@@ -898,6 +976,23 @@ document.querySelectorAll('#langues button').forEach(b=>{
   });
 });
 if(langue!=='fr')traduireDOM();
+
+function appliquerLongueur(n){
+  LONGUEUR=n;
+  document.querySelectorAll('#longueur button').forEach(b=>
+    b.setAttribute('aria-pressed',String(Number(b.dataset.longueur)===n)));
+  const d=lire(); d.longueur=n; ecrire(d);
+  rafraichirAccueil();
+}
+document.querySelectorAll('#longueur button').forEach(b=>
+  b.addEventListener('click',()=>appliquerLongueur(Number(b.dataset.longueur))));
+appliquerLongueur(LONGUEURS.indexOf(lire().longueur)!==-1?lire().longueur:10);
+
+$('btnReset').addEventListener('click',()=>{
+  if(!confirm(L('Effacer tous les records et la liste des erreurs ?')))return;
+  const d=lire(); d.records={}; d.erreurs=[]; d.parties=0; ecrire(d);
+  rafraichirAccueil();
+});
 
 /* ---------- Branchements ---------- */
 document.querySelectorAll('.plaque').forEach(b=>
